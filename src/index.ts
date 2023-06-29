@@ -13,19 +13,6 @@ app.use(basicAuth({
 }))
 app.use('/blogs', blogsRouter)
 
-// type ErrorsMessage = {
-//     message: String;
-//     field: String;
-// }
-
-
-
-// function validationError(field: string, message: string): ErrorsMessage {
-//     return { message, field }
-// }
-
-
-
 
 app.listen( port, () => {
     console.log( `server started at http://localhost:${ port }` );

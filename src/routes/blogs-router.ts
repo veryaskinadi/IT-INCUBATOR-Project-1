@@ -1,5 +1,6 @@
 import {Request, Response, Router} from "express";
-import {body, validationResult} from "express-validator";
+import {body} from "express-validator";
+import {inputValidationMadleware} from "../midlewares/input-validation-midleware";
 
 
 type Blog = {
@@ -22,12 +23,7 @@ blogsRouter.get('/', (request: Request, response: Response) => {
     response.status(200).send(blogs);
 });
 
-blogsRouter.post('/', nameValidation, descriptionValidation, websiteUrlValidation, (request: Request, response: Response) => {
-    const errors = validationResult(request)
-
-    if(!errors.isEmpty()){
-        return response.status(400).json({errors: errors.array()})
-    }
+blogsRouter.post('/', nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMadleware, (request: Request, response: Response) => {
 
     const newBlog = {
         id: String(+(new Date())),
@@ -37,24 +33,8 @@ blogsRouter.post('/', nameValidation, descriptionValidation, websiteUrlValidatio
     response.status(201).send(newBlog);
 });
 
-blogsRouter.put('/:id', nameValidation, descriptionValidation, websiteUrlValidation, (request: Request, response: Response) => {
-    const errors = validationResult(request)
+blogsRouter.put('/:id', nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMadleware, (request: Request, response: Response) => {
 
-    if(!errors.isEmpty()){
-        return response.status(400).json({errors: errors.array()})
-    }
-
-    // let blog = blogs.find((blog: Blog) => blog.id === request.params.id)
-    // if (!blog) {
-    //     response.sendStatus(404);
-    //     return
-    // }
-    //
-    // const errorsMessages = validate(request.body);
-    // if (errorsMessages.length > 0) {
-    //     response.status(400).send({ errorsMessages });
-    //     return
-    // }
     let blog = blogs.find((blog: Blog) => blog.id === request.params.id)
     if (blog) {
         blog = Object.assign(blog, request.body)

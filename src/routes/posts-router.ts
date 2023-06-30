@@ -32,6 +32,7 @@ postsRouter.post('/', authMiddleWare, ...postMiddlewares, (request: Request, res
 
     const newPost = {
         id: String(+(new Date())),
+        blogName: "People",
         ...request.body,
     }
     posts.push(newPost);

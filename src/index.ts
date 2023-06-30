@@ -15,7 +15,7 @@ app.use(basicAuth({
 }))
 app.use('/blogs', blogsRouter);
 app.use('/posts', postsRouter);
-app.use('/posts', testingRouter);
+app.use('/testing', testingRouter);
 
 
 app.listen( port, () => {

@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 import {body} from "express-validator";
 import {inputValidationMadleware} from "../midlewares/input-validation-midleware";
+import {authMiddleWare} from "../midlewares/auth-middleware";
 
 type Post = {
     id: "string",
@@ -27,7 +28,7 @@ postsRouter.get('/', (request: Request, response: Response) => {
 const postMiddlewares = [
     titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMadleware
 ];
-postsRouter.post('/', ...postMiddlewares, (request: Request, response: Response) => {
+postsRouter.post('/', authMiddleWare, ...postMiddlewares, (request: Request, response: Response) => {
 
     const newPost = {
         id: String(+(new Date())),
@@ -37,7 +38,7 @@ postsRouter.post('/', ...postMiddlewares, (request: Request, response: Response)
     response.status(201).send(newPost);
 });
 
-postsRouter.put('/:id', titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMadleware, (request: Request, response: Response) => {
+postsRouter.put('/:id', authMiddleWare, titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMadleware, (request: Request, response: Response) => {
 
     let post = posts.find((post: Post) => post.id === request.params.id)
     if (post) {
@@ -55,7 +56,7 @@ postsRouter.get('/:id', (request: Request, response: Response) => {
     }
 });
 
-postsRouter.delete('/:id', (request: Request, response: Response) => {
+postsRouter.delete('/:id', authMiddleWare, (request: Request, response: Response) => {
     let postIndex = posts.findIndex(b => b.id === request.params.id)
 
     if(postIndex === -1){

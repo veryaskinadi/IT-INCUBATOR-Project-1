@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 import {body} from "express-validator";
 import {inputValidationMadleware} from "../midlewares/input-validation-midleware";
+import {authMiddleWare} from "../midlewares/auth-middleware";
 
 
 type Blog = {
@@ -23,7 +24,7 @@ blogsRouter.get('/', (request: Request, response: Response) => {
     response.status(200).send(blogs);
 });
 
-blogsRouter.post('/', nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMadleware, (request: Request, response: Response) => {
+blogsRouter.post('/', authMiddleWare, nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMadleware, (request: Request, response: Response) => {
 
     const newBlog = {
         id: String(+(new Date())),
@@ -33,7 +34,7 @@ blogsRouter.post('/', nameValidation, descriptionValidation, websiteUrlValidatio
     response.status(201).send(newBlog);
 });
 
-blogsRouter.put('/:id', nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMadleware, (request: Request, response: Response) => {
+blogsRouter.put('/:id', authMiddleWare, nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMadleware, (request: Request, response: Response) => {
 
     let blog = blogs.find((blog: Blog) => blog.id === request.params.id)
     if (blog) {
@@ -52,7 +53,7 @@ blogsRouter.get('/:id', (request: Request, response: Response) => {
     }
 });
 
-blogsRouter.delete('/:id', (request: Request, response: Response) => {
+blogsRouter.delete('/:id', authMiddleWare, (request: Request, response: Response) => {
     let blogIndex = blogs.findIndex(b => b.id === request.params.id)
 
     if(blogIndex === -1){

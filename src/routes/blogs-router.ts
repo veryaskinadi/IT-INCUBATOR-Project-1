@@ -9,12 +9,12 @@ type Blog = {
     description: "string",
     websiteUrl: "string",
 }
+
 const blogs: Blog[] = [];
 
-const nameValidation = body('name').isString().isLength({min: 1, max: 15}).trim();
-const descriptionValidation = body('description').isString().isLength({min: 1, max: 500}).trim();
-const websiteUrlValidation = body('websiteUrl').isString().isLength({min: 1, max: 100}).matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/).trim()
-
+const nameValidation = body('name').isString().isLength({max: 15}).trim();
+const descriptionValidation = body('description').isString().isLength({max: 500}).trim();
+const websiteUrlValidation = body('websiteUrl').isString().isLength({max: 100}).matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/).trim()
 
 
 export const blogsRouter = Router({})

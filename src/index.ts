@@ -1,6 +1,8 @@
 import express from 'express';
 import bodyParser from "body-parser";
 import {blogsRouter} from "./routes/blogs-router";
+import {postsRouter} from "./routes/posts-router";
+import {testingRouter} from "./routes/testing-router";
 
 const app = express();
 app.use(bodyParser.json({strict: false}));
@@ -11,7 +13,9 @@ const basicAuth = require('express-basic-auth')
 app.use(basicAuth({
     users: { 'admin': 'qwerty' }
 }))
-app.use('/blogs', blogsRouter)
+app.use('/blogs', blogsRouter);
+app.use('/posts', postsRouter);
+app.use('/posts', testingRouter);
 
 
 app.listen( port, () => {

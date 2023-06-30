@@ -1,8 +1,11 @@
 import {Request, Response, Router} from "express";
+import {blogs} from "./blogs-router";
+import {posts} from "./posts-router";
 
 export const testingRouter = Router({})
 
 testingRouter.delete('/all-data', (request: Request, response: Response) => {
-    request.body.length = 0
+    blogs.length = 0;
+    posts.length = 0;
     response.sendStatus(204);
 });

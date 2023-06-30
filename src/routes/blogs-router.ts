@@ -10,11 +10,11 @@ type Blog = {
     websiteUrl: "string",
 }
 
-const blogs: Blog[] = [];
+export const blogs: Blog[] = [];
 
-const nameValidation = body('name').isString().isLength({max: 15}).trim();
-const descriptionValidation = body('description').isString().isLength({max: 500}).trim();
-const websiteUrlValidation = body('websiteUrl').isString().isLength({max: 100}).matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/).trim()
+const nameValidation = body('name').isString().trim().isLength({max: 15});
+const descriptionValidation = body('description').trim().isString().isLength({max: 500});
+const websiteUrlValidation = body('websiteUrl').trim().isString().isLength({max: 100}).matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
 
 
 export const blogsRouter = Router({})

@@ -11,20 +11,23 @@ type Post = {
     blogName: "string",
 }
 
-const posts: Post[] = [];
+export const posts: Post[] = [];
 
 const titleValidation = body('title').isString().isLength({max: 30}).trim();
 const shortDescriptionValidation = body('shortDescription').isLength({max: 100}).trim();
 const contentValidation = body('content').isLength({max: 1000}).trim();
 const blogIdValidation = body('content').trim();
 
-export const postsRouter = Router({})
+export const postsRouter = Router({});
 
 postsRouter.get('/', (request: Request, response: Response) => {
     response.status(200).send(posts);
 });
 
-postsRouter.post('/', titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMadleware, (request: Request, response: Response) => {
+const postMiddlewares = [
+    titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMadleware
+];
+postsRouter.post('/', ...postMiddlewares, (request: Request, response: Response) => {
 
     const newPost = {
         id: String(+(new Date())),

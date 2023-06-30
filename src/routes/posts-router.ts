@@ -41,10 +41,14 @@ postsRouter.post('/', authMiddleWare, ...postMiddlewares, (request: Request, res
 postsRouter.put('/:id', authMiddleWare, titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMadleware, (request: Request, response: Response) => {
 
     let post = posts.find((post: Post) => post.id === request.params.id)
-    if (post) {
-        post = Object.assign(post, request.body)
-        response.sendStatus(204);
+
+    if (!post) {
+        response.sendStatus(404);
+        return
     }
+
+    post = Object.assign(post, request.body)
+    response.sendStatus(204);
 });
 
 postsRouter.get('/:id', (request: Request, response: Response) => {

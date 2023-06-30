@@ -37,10 +37,14 @@ blogsRouter.post('/', authMiddleWare, nameValidation, descriptionValidation, web
 blogsRouter.put('/:id', authMiddleWare, nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMadleware, (request: Request, response: Response) => {
 
     let blog = blogs.find((blog: Blog) => blog.id === request.params.id)
-    if (blog) {
-        blog = Object.assign(blog, request.body)
-        response.sendStatus(204);
+
+    if (!blog) {
+        response.sendStatus(404);
+        return
     }
+
+    blog = Object.assign(blog, request.body)
+    response.sendStatus(204);
 
 });
 

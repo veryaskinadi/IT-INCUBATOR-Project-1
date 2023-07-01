@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {body} from "express-validator";
+import {checkSchema} from "express-validator";
 import {inputValidationMadleware} from "../midlewares/input-validation-midleware";
 import {authMiddleWare} from "../midlewares/auth-middleware";
 
@@ -13,9 +13,44 @@ type Blog = {
 
 export const blogs: Blog[] = [];
 
-const nameValidation = body('name').isString().trim().isLength({max: 15});
-const descriptionValidation = body('description').trim().isString().isLength({max: 500});
-const websiteUrlValidation = body('websiteUrl').trim().isString().isLength({max: 100}).matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
+const createBlogSchema = {
+    name: {
+        isString: {
+            errorMessage: 'Имя должно быть строкой',
+        },
+        trim: true,
+        isLength: {
+            options: { max: 15 },
+            errorMessage: 'Имя должно содержать не более 15 символов',
+        },
+    },
+    description: {
+        isString: {
+            errorMessage: 'Описание должно быть строкой',
+        },
+        trim: true,
+        isLength: {
+            options: { max: 500 },
+            errorMessage: 'Описание должно содержать не более 500 символов',
+        },
+    },
+    websiteUrl: {
+        trim: true,
+        isLength: {
+            options: { max: 100 },
+            errorMessage: 'Адрес должен содержать не более 100 символов',
+        },
+        matches: {
+            trim: true,
+            options: (/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/),
+        }
+    },
+}
+
+// const nameValidation = body('name').isString().trim().isLength({max: 15});
+// const descriptionValidation = body('description').trim().isString().isLength({max: 500});
+// const websiteUrlValidation = body('websiteUrl').trim().isString().isLength({max: 100})
+//     .matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
 
 
 export const blogsRouter = Router({})
@@ -24,7 +59,7 @@ blogsRouter.get('/', (request: Request, response: Response) => {
     response.status(200).send(blogs);
 });
 
-blogsRouter.post('/', authMiddleWare, nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMadleware, (request: Request, response: Response) => {
+blogsRouter.post('/', checkSchema(createBlogSchema), authMiddleWare, inputValidationMadleware, (request: Request, response: Response) => {
 
     const newBlog = {
         id: String(+(new Date())),
@@ -34,7 +69,7 @@ blogsRouter.post('/', authMiddleWare, nameValidation, descriptionValidation, web
     response.status(201).send(newBlog);
 });
 
-blogsRouter.put('/:id', authMiddleWare, nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMadleware, (request: Request, response: Response) => {
+blogsRouter.put('/:id', checkSchema(createBlogSchema), authMiddleWare, inputValidationMadleware, (request: Request, response: Response) => {
 
     let blog = blogs.find((blog: Blog) => blog.id === request.params.id)
 

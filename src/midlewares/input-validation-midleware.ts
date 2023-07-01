@@ -6,7 +6,6 @@ export const inputValidationMadleware = (request: Request, response: Response, n
     console.log(errors);
 
     if(!errors.isEmpty()){
-        console.log(errors.mapped())
         const errorsMessages = errors.array({ onlyFirstError: false }).map(error => ({
             message: error.msg,
             field: (error as FieldValidationError).path,

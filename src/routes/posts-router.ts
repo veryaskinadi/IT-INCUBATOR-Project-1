@@ -26,8 +26,8 @@ const createPostSchema = {
         },
         trim: true,
         isLength: {
-            options: { max: 30 },
-            errorMessage: 'Заголовок должен содержать не более 30 символов',
+            options: {min:1, max: 30 },
+            errorMessage: 'Заголовок должен содержать от 1 до 30 символов',
         },
     },
     shortDescription: {

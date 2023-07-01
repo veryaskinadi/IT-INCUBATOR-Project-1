@@ -20,8 +20,8 @@ const createBlogSchema = {
         },
         trim: true,
         isLength: {
-            options: { max: 15 },
-            errorMessage: 'Имя должно содержать не более 15 символов',
+            options: {min:1, max: 15 },
+            errorMessage: 'Имя должно содержать от 1 до 15 символов',
         },
     },
     description: {

@@ -15,30 +15,39 @@ export const blogs: Blog[] = [];
 
 const createBlogSchema = {
     name: {
-        isString: {
-            errorMessage: 'Имя должно быть строкой',
+        exists: {
+            bail: true,
+            errorMessage: 'Неверное имя',
         },
+        isString: true,
         trim: true,
+        notEmpty: true,
         isLength: {
-            options: {min:1, max: 15 },
-            errorMessage: 'Имя должно содержать от 1 до 15 символов',
+            options: {max: 15 },
         },
     },
     description: {
-        isString: {
-            errorMessage: 'Описание должно быть строкой',
+        exists: {
+            bail: true,
+            errorMessage: 'Неверное описание',
         },
+        isString: true,
         trim: true,
+        notEmpty: true,
         isLength: {
             options: { max: 500 },
-            errorMessage: 'Описание должно содержать не более 500 символов',
         },
     },
     websiteUrl: {
+        exists: {
+            bail: true,
+            errorMessage: 'Неверный адрес',
+        },
         trim: true,
+        notEmpty: true,
+        isString: true,
         isLength: {
             options: { max: 100 },
-            errorMessage: 'Адрес должен содержать не более 100 символов',
         },
         matches: {
             trim: true,
@@ -46,12 +55,6 @@ const createBlogSchema = {
         }
     },
 }
-
-// const nameValidation = body('name').isString().trim().isLength({max: 15});
-// const descriptionValidation = body('description').trim().isString().isLength({max: 500});
-// const websiteUrlValidation = body('websiteUrl').trim().isString().isLength({max: 100})
-//     .matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
-
 
 export const blogsRouter = Router({})
 

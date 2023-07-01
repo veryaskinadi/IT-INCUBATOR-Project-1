@@ -13,47 +13,52 @@ type Post = {
 }
 
 export const posts: Post[] = [];
-//
-// const titleValidation = body('title').isString().isLength({max: 30}).trim();
-// const shortDescriptionValidation = body('shortDescription').isLength({max: 100}).trim();
-// const contentValidation = body('content').isLength({max: 1000}).trim();
-// const blogIdValidation = body('content').trim();
 
 const createPostSchema = {
     title: {
-        isString: {
-            errorMessage: 'Заголовок должен быть строкой',
+        exists: {
+            bail: true,
+            errorMessage: 'Неверный заголовок',
         },
+        isString: true,
         trim: true,
+        notEmpty: true,
         isLength: {
-            options: {min:1, max: 30 },
-            errorMessage: 'Заголовок должен содержать от 1 до 30 символов',
+            options: {max: 30 },
         },
+
     },
     shortDescription: {
-        isString: {
-            errorMessage: 'Краткое описание должно быть строкой',
+        exists: {
+            bail: true,
+            errorMessage: 'Неверное описание',
         },
+        isString: true,
         trim: true,
+        notEmpty: true,
         isLength: {
             options: { max: 100 },
-            errorMessage: 'Краткое описание должно содержать не более 100 символов',
         },
     },
     content: {
-        isString: {
-            errorMessage: 'Контент должен быть строкой',
+        exists: {
+            bail: true,
+            errorMessage: 'Неверный контент',
         },
+        isString: true,
         trim: true,
+        notEmpty: true,
         isLength: {
             options: { max: 1000 },
-            errorMessage: 'Содержимое должно содержать не более 1000 символов',
         },
     },
     blogId: {
-        isString: {
-            errorMessage: 'Контент должен быть строкой',
+        exists: {
+            bail: true,
+            errorMessage: 'Неверный id блога',
         },
+        notEmpty: true,
+        isString: true,
     },
 }
 

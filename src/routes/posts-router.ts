@@ -1,5 +1,4 @@
 import { Request, Response, Router } from "express";
-import { inputValidationMadleware } from "../midlewares/input-validation-midleware";
 import { authMiddleWare } from "../midlewares/auth-middleware";
 import { blogs, Blog } from "./blogs-router";
 import { createPostValidator } from "../midlewares/validation/postValidation/validator"
@@ -21,7 +20,7 @@ postsRouter.get('/', (request: Request, response: Response) => {
     response.status(200).send(posts);
 });
 
-postsRouter.post('/', createPostValidator, authMiddleWare, (request: Request, response: Response) => {
+postsRouter.post('/', authMiddleWare, createPostValidator, (request: Request, response: Response) => {
 
     let blog = blogs.find((blog: Blog) => blog.id === request.body.blogId)
     if (!blog) {
@@ -37,7 +36,7 @@ postsRouter.post('/', createPostValidator, authMiddleWare, (request: Request, re
     response.status(201).send(newPost);
 });
 
-postsRouter.put('/:id', createPostValidator, authMiddleWare, inputValidationMadleware, (request: Request, response: Response) => {
+postsRouter.put('/:id', authMiddleWare, createPostValidator, (request: Request, response: Response) => {
 
     let post = posts.find((post: Post) => post.id === request.params.id)
 

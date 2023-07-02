@@ -1,4 +1,4 @@
-import { updatePostSchema } from "./schema"
+import { postSchema } from "./schema"
 import { Request, Response, NextFunction } from "express";
 import {checkSchema, FieldValidationError, validationResult} from "express-validator";
 import {Blog, blogs} from "../../../routes/blogs-router";
@@ -8,10 +8,8 @@ type ValidationError = {
     field: string;
 }
 
-export async function UpdatePostValidator(request: Request, response: Response, next: NextFunction) {
-
-
-    await checkSchema(updatePostSchema).run(request);
+export async function createPostValidator(request: Request, response: Response, next: NextFunction) {
+    await checkSchema(postSchema).run(request);
     const errors = validationResult(request);
 
     let errorsMessages: ValidationError[] = [];

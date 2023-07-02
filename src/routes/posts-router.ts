@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { authMiddleWare } from "../midlewares/auth-middleware";
 import { blogs, Blog } from "./blogs-router";
-import { createPostValidator } from "../midlewares/validation/createPostValidation/validator"
+import { createPostValidator } from "../midlewares/validation/postValidation/validator"
 
 type Post = {
     id: string;

@@ -1,4 +1,4 @@
-export const updatePostSchema = {
+export const postSchema = {
     title: {
         exists: {
             bail: true,

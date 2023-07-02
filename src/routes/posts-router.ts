@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { authMiddleWare } from "../midlewares/auth-middleware";
 import { blogs, Blog } from "./blogs-router";
-import { createPostValidator } from "../midlewares/validation/postValidation/validator"
+import { createPostValidator } from "../midlewares/validation/createPostValidation/validator"
 
 type Post = {
     id: string;
@@ -41,7 +41,7 @@ postsRouter.put('/:id', authMiddleWare, createPostValidator, (request: Request, 
     let post = posts.find((post: Post) => post.id === request.params.id)
 
     if (!post) {
-        response.sendStatus(400);
+        response.sendStatus(404);
         return
     }
 

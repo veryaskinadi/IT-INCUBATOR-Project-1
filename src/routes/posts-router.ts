@@ -1,66 +1,19 @@
-import {Request, Response, Router} from "express";
-import {checkSchema} from "express-validator";
-import {inputValidationMadleware} from "../midlewares/input-validation-midleware";
-import {authMiddleWare} from "../midlewares/auth-middleware";
+import { Request, Response, Router } from "express";
+import { inputValidationMadleware } from "../midlewares/input-validation-midleware";
+import { authMiddleWare } from "../midlewares/auth-middleware";
+import { blogs, Blog } from "./blogs-router";
+import { createPostValidator } from "../midlewares/validation/postValidation/validator"
 
 type Post = {
-    id: "string",
-    title: "string",
-    shortDescription: "string",
-    content: "string",
-    blogId: "string",
-    blogName: "string",
+    id: string;
+    title: string;
+    shortDescription: string;
+    content: string;
+    blogId: string;
+    blogName: string;
 }
 
 export const posts: Post[] = [];
-
-const createPostSchema = {
-    title: {
-        exists: {
-            bail: true,
-            errorMessage: 'Неверный заголовок',
-        },
-        isString: true,
-        trim: true,
-        notEmpty: true,
-        isLength: {
-            options: {max: 30 },
-        },
-
-    },
-    shortDescription: {
-        exists: {
-            bail: true,
-            errorMessage: 'Неверное описание',
-        },
-        isString: true,
-        trim: true,
-        notEmpty: true,
-        isLength: {
-            options: { max: 100 },
-        },
-    },
-    content: {
-        exists: {
-            bail: true,
-            errorMessage: 'Неверный контент',
-        },
-        isString: true,
-        trim: true,
-        notEmpty: true,
-        isLength: {
-            options: { max: 1000 },
-        },
-    },
-    blogId: {
-        exists: {
-            bail: true,
-            errorMessage: 'Неверный id блога',
-        },
-        notEmpty: true,
-        isString: true,
-    },
-}
 
 export const postsRouter = Router({});
 
@@ -68,23 +21,28 @@ postsRouter.get('/', (request: Request, response: Response) => {
     response.status(200).send(posts);
 });
 
-postsRouter.post('/', checkSchema(createPostSchema), authMiddleWare, inputValidationMadleware, (request: Request, response: Response) => {
+postsRouter.post('/', createPostValidator, authMiddleWare, (request: Request, response: Response) => {
 
+    let blog = blogs.find((blog: Blog) => blog.id === request.body.blogId)
+    if (!blog) {
+        response.sendStatus(404);
+        return
+    }
     const newPost = {
         id: String(+(new Date())),
-        blogName: "People",
+        blogName: blog.name,
         ...request.body,
     }
     posts.push(newPost);
     response.status(201).send(newPost);
 });
 
-postsRouter.put('/:id', checkSchema(createPostSchema), authMiddleWare, inputValidationMadleware, (request: Request, response: Response) => {
+postsRouter.put('/:id', createPostValidator, authMiddleWare, inputValidationMadleware, (request: Request, response: Response) => {
 
     let post = posts.find((post: Post) => post.id === request.params.id)
 
     if (!post) {
-        response.sendStatus(404);
+        response.sendStatus(400);
         return
     }
 

@@ -4,11 +4,11 @@ import {inputValidationMadleware} from "../midlewares/input-validation-midleware
 import {authMiddleWare} from "../midlewares/auth-middleware";
 
 
-type Blog = {
-    id: "string",
-    name: "string",
-    description: "string",
-    websiteUrl: "string",
+export type Blog = {
+    id: string;
+    name: string;
+    description: string;
+    websiteUrl: string;
 }
 
 export const blogs: Blog[] = [];
@@ -19,11 +19,19 @@ const createBlogSchema = {
             bail: true,
             errorMessage: 'Неверное имя',
         },
-        isString: true,
+        isString: {
+            bail: true,
+            errorMessage: 'Неверное имя',
+        },
         trim: true,
-        notEmpty: true,
+        notEmpty: {
+            bail: true,
+            errorMessage: 'Неверное имя',
+        },
         isLength: {
+            bail: true,
             options: {max: 15 },
+            errorMessage: 'Неверное имя',
         },
     },
     description: {
@@ -31,11 +39,19 @@ const createBlogSchema = {
             bail: true,
             errorMessage: 'Неверное описание',
         },
-        isString: true,
+        isString: {
+            bail: true,
+            errorMessage: 'Неверное описание',
+        },
         trim: true,
-        notEmpty: true,
+        notEmpty: {
+            bail: true,
+            errorMessage: 'Неверное описание',
+        },
         isLength: {
+            bail: true,
             options: { max: 500 },
+            errorMessage: 'Неверное описание',
         },
     },
     websiteUrl: {
@@ -44,14 +60,23 @@ const createBlogSchema = {
             errorMessage: 'Неверный адрес',
         },
         trim: true,
-        notEmpty: true,
-        isString: true,
+        notEmpty: {
+            bail: true,
+            errorMessage: 'Неверный адрес',
+        },
+        isString: {
+            bail: true,
+            errorMessage: 'Неверный адрес',
+        },
         isLength: {
+            bail: true,
             options: { max: 100 },
+            errorMessage: 'Неверный адрес',
         },
         matches: {
-            trim: true,
+            bail: true,
             options: (/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/),
+            errorMessage: 'Неверный адрес',
         }
     },
 }

@@ -1,3 +1,6 @@
+import {CustomValidator} from "express-validator";
+import {Blog, blogs} from "../../../routes/blogs-router";
+
 export const postSchema = {
     title: {
         exists: {
@@ -67,5 +70,14 @@ export const postSchema = {
         },
         notEmpty: true,
         isString: true,
+        // custom: (field) => {
+        //     let blog = blogs.find((blog: Blog) => blog.id === field)
+        //
+        //     if(!blog){
+        //         throw new Error('Неверный id блога')
+        //     }
+        //
+        //     return true
+        // }
     },
 }

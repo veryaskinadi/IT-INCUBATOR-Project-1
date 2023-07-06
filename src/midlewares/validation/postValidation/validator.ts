@@ -1,7 +1,7 @@
 import { postSchema } from "./schema"
 import { Request, Response, NextFunction } from "express";
 import {checkSchema, FieldValidationError, validationResult} from "express-validator";
-import {Blog, blogs} from "../../../routes/blogs-router";
+import {Blog, blogs} from "../../../store";
 
 type ValidationError = {
     message: string;
@@ -15,7 +15,7 @@ export async function createPostValidator(request: Request, response: Response, 
     let errorsMessages: ValidationError[] = [];
 
     if (!errors.isEmpty()) {
-        errorsMessages = errors.array({ onlyFirstError: false }).map(error => ({
+        errorsMessages = errors.array({ onlyFirstError: true }).map(error => ({
             message: error.msg,
             field: (error as FieldValidationError).path,
         }))

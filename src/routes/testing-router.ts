@@ -1,6 +1,5 @@
 import {Request, Response, Router} from "express";
-import {blogs} from "./blogs-router";
-import {posts} from "./posts-router";
+import {blogs, posts} from "../store";
 
 export const testingRouter = Router({})
 

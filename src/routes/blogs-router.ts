@@ -2,133 +2,88 @@ import {Request, Response, Router} from "express";
 import {checkSchema} from "express-validator";
 import {inputValidationMadleware} from "../midlewares/input-validation-midleware";
 import {authMiddleWare} from "../midlewares/auth-middleware";
+import {
+    createBlog,
+    findBlogById,
+    findBlogs,
+    removeBlogById,
+    updateBlog
+} from "../repositories/blogs-repository";
 
-
-export type Blog = {
-    id: string;
-    name: string;
-    description: string;
-    websiteUrl: string;
-}
-
-export const blogs: Blog[] = [];
 
 const createBlogSchema = {
     name: {
-        exists: {
-            bail: true,
-            errorMessage: 'Неверное имя',
-        },
-        isString: {
-            bail: true,
-            errorMessage: 'Неверное имя',
-        },
+        exists: true,
+        isString: true,
         trim: true,
-        notEmpty: {
-            bail: true,
-            errorMessage: 'Неверное имя',
-        },
+        notEmpty: true,
         isLength: {
-            bail: true,
             options: {max: 15 },
-            errorMessage: 'Неверное имя',
         },
+        errorMessage: 'Неверное имя',
     },
     description: {
-        exists: {
-            bail: true,
-            errorMessage: 'Неверное описание',
-        },
-        isString: {
-            bail: true,
-            errorMessage: 'Неверное описание',
-        },
+        exists: true,
+        isString: true,
         trim: true,
-        notEmpty: {
-            bail: true,
-            errorMessage: 'Неверное описание',
-        },
+        notEmpty: true,
         isLength: {
-            bail: true,
             options: { max: 500 },
-            errorMessage: 'Неверное описание',
         },
+        errorMessage: 'Неверное описание',
     },
     websiteUrl: {
-        exists: {
-            bail: true,
-            errorMessage: 'Неверный адрес',
-        },
+        exists: true,
         trim: true,
-        notEmpty: {
-            bail: true,
-            errorMessage: 'Неверный адрес',
-        },
-        isString: {
-            bail: true,
-            errorMessage: 'Неверный адрес',
-        },
+        notEmpty: true,
+        isString: true,
         isLength: {
-            bail: true,
             options: { max: 100 },
-            errorMessage: 'Неверный адрес',
         },
         matches: {
-            bail: true,
             options: (/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/),
-            errorMessage: 'Неверный адрес',
-        }
+        },
+        errorMessage: 'Неверный адрес',
     },
 }
 
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', (request: Request, response: Response) => {
-    response.status(200).send(blogs);
+    response.status(200).send(findBlogs());
 });
 
 blogsRouter.post('/', checkSchema(createBlogSchema), authMiddleWare, inputValidationMadleware, (request: Request, response: Response) => {
-
-    const newBlog = {
-        id: String(+(new Date())),
-        ...request.body,
-    }
-    blogs.push(newBlog);
-    response.status(201).send(newBlog);
+    response.status(201).send(createBlog(request.body));
 });
 
 blogsRouter.put('/:id', checkSchema(createBlogSchema), authMiddleWare, inputValidationMadleware, (request: Request, response: Response) => {
-
-    let blog = blogs.find((blog: Blog) => blog.id === request.params.id)
-
-    if (!blog) {
-        response.sendStatus(404);
-        return
+    let resultUpdate = updateBlog(request.params.id, request.body);
+    if (resultUpdate) {
+        response.sendStatus(204);
+        return;
     }
-
-    blog = Object.assign(blog, request.body)
-    response.sendStatus(204);
+    response.sendStatus(404);
 
 });
 
 blogsRouter.get('/:id', (request: Request, response: Response) => {
-    const blog = blogs.find((blog: Blog) => blog.id === request.params.id)
+    const blog = findBlogById(request.params.id)
     if (blog) {
         response.status(200).send(blog);
-    } else {
-        response.sendStatus(404)
+        return;
     }
+    response.sendStatus(404);
 });
 
 blogsRouter.delete('/:id', authMiddleWare, (request: Request, response: Response) => {
-    let blogIndex = blogs.findIndex(b => b.id === request.params.id)
+    const resultDelete = removeBlogById(request.params.id)
 
-    if(blogIndex === -1){
-        response.sendStatus(404)
-        return
+    if (resultDelete) {
+        response.sendStatus(204);
+        return;
     }
 
-    blogs.splice(blogIndex, 1)
-    response.sendStatus(204)
+    response.sendStatus(204);
 });
 

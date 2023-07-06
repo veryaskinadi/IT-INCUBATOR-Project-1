@@ -1,73 +1,39 @@
-import {CustomValidator} from "express-validator";
-import {Blog, blogs} from "../../../routes/blogs-router";
+// import {CustomValidator} from "express-validator";
+// import {Blog, blogs} from "../../../routes/blogs-router";
 
 export const postSchema = {
     title: {
-        exists: {
-            bail: true,
-            errorMessage: 'Неверный заголовок',
-        },
-        isString: {
-            bail: true,
-            errorMessage: 'Неверный заголовок',
-        },
+        exists: true,
+        isString: true,
         trim: true,
-        notEmpty: {
-            bail: true,
-            errorMessage: 'Неверный заголовок',
-        },
+        notEmpty: true,
         isLength: {
-            bail: true,
             options: {max: 30 },
-            errorMessage: 'Неверный заголовок',
         },
-
+        errorMessage: 'Неверный заголовок',
     },
     shortDescription: {
-        exists: {
-            bail: true,
-            errorMessage: 'Неверное описание',
-        },
-        isString: {
-            bail: true,
-            errorMessage: 'Неверное описание',
-        },
+        exists: true,
+        isString: true,
         trim: true,
-        notEmpty: {
-            bail: true,
-            errorMessage: 'Неверное описание',
-        },
+        notEmpty: true,
         isLength: {
-            bail: true,
             options: { max: 100 },
-            errorMessage: 'Неверное описание',
         },
+        errorMessage: 'Неверное описание',
     },
     content: {
-        exists: {
-            bail: true,
-            errorMessage: 'Неверный контент',
-        },
-        isString: {
-            bail: true,
-            errorMessage: 'Неверный контент',
-        },
+        exists: true,
+        isString: true,
         trim: true,
-        notEmpty: {
-            bail: true,
-            errorMessage: 'Неверный контент',
-        },
+        notEmpty: true,
         isLength: {
-            bail: true,
             options: { max: 1000 },
-            errorMessage: 'Неверный контент',
         },
+        errorMessage: 'Неверный контент',
     },
     blogId: {
-        exists: {
-            bail: true,
-            errorMessage: 'Неверный id блога',
-        },
+        exists: true,
         notEmpty: true,
         isString: true,
         // custom: (field) => {

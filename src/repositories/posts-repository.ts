@@ -1,23 +1,23 @@
-import {posts, Post, blogs, Blog} from "../store";
+import {posts, Post, blogs, Blog} from "./store";
 
 export const findPosts = () => {return posts}
 
-export const createPost = (data, blogId) => {
-    let blog = blogs.find((blog: Blog) => blog.id === blogId)
+export const createPost = (data: any, blogId: string) => {
+    let blog = blogs.find((blog: any) => blog.id === blogId)
     if (!blog) {
         return null
     }
     const newPost = {
-        id: String(+(new Date())),
         blogName: blog.name,
         ...data,
     }
+    newPost.id = String(+(new Date()))
     posts.push(newPost);
     return newPost;
 }
 
-export const updatePost = (id, data) => {
-    let post = posts.find((post: Post) => post.id === id)
+export const updatePost = (id: string, data: any) => {
+    let post = posts.find((post: any) => post.id === id)
 
     if (!post) {
         return null;
@@ -27,7 +27,7 @@ export const updatePost = (id, data) => {
     return true;
 }
 
-export const findPostById = id => {
+export const findPostById = (id: string) => {
     const post = posts.find((post: Post) => post.id === id)
     if (post) {
         return post;
@@ -36,7 +36,7 @@ export const findPostById = id => {
     }
 }
 
-export const removePostById = id => {
+export const removePostById = (id: string) => {
     let postIndex = posts.findIndex(b => b.id === id)
 
     if(postIndex === -1){

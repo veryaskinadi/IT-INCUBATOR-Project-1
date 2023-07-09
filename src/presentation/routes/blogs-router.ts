@@ -69,7 +69,7 @@ blogsRouter.post(
 blogsRouter.put('/:id',
     checkSchema(createBlogSchema),
     authMiddleWare, inputValidationMadleware,
-    (request: Request<{id:string}, {}, BlogUpdateModel>, response: Response) => {
+    (request: Request<{id:string}, {}, {}>, response: Response) => {
         let resultUpdate = updateBlog(request.params.id, request.body);
         if (resultUpdate) {
             response.sendStatus(204);

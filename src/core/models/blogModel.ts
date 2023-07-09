@@ -3,4 +3,6 @@ export type Blog = {
     description: string;
     websiteUrl: string;
     id: string;
+    createdAt: string;
+    isMembership: boolean;
 }

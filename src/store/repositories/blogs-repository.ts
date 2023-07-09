@@ -1,18 +1,17 @@
 import {Blog, blogs} from "../store";
 import {CreateBlogStoreModel} from "../models/CreateBlogStoreModel";
-import {BlogStoreModel} from "../models/BlogStoreModel"
-import {client} from "../bd"
+import {BlogStoreModel} from "../models/BlogStoreModel";
+import {client} from "../bd";
 
 const blogsCollection = client.db().collection('blogs');
-
 
 export const findBlogs = () => {return blogs}
 
 export const createBlog = async (data: CreateBlogStoreModel): Promise<BlogStoreModel> => {
-    const result = await blogsCollection.insertOne(data)
+    const result = await blogsCollection.insertOne({...data});
     return {
         ...data,
-        id: result.insertedId
+        id: result.insertedId.toString(),
     }
 }
 

@@ -1,4 +1,4 @@
-import {posts, Post, blogs, Blog} from "./store";
+import {posts, Post, blogs} from "../store";
 
 export const findPosts = () => {return posts}
 

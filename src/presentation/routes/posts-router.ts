@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { authMiddleWare } from "../midlewares/auth-middleware";
 import { createPostValidator } from "../midlewares/validation/postValidation/validator"
-import {createPost, findPostById, findPosts, updatePost, removePostById} from "../repositories/posts-repository";
+import {createPost, findPostById, findPosts, updatePost, removePostById} from "../../store/repositories/posts-repository";
 
 
 export const postsRouter = Router({});

@@ -1,9 +1,9 @@
 import express from 'express';
 import bodyParser from "body-parser";
-import {blogsRouter} from "./routes/blogs-router";
-import {postsRouter} from "./routes/posts-router";
-import {testingRouter} from "./routes/testing-router";
-import {runDb} from "./repositories/bd";
+import {blogsRouter} from "./presentation/routes/blogs-router";
+import {postsRouter} from "./presentation/routes/posts-router";
+import {testingRouter} from "./presentation/routes/testing-router";
+import {runDb} from "./store/bd";
 
 
 const app = express();

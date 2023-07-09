@@ -3,12 +3,14 @@ import {checkSchema} from "express-validator";
 import {inputValidationMadleware} from "../midlewares/input-validation-midleware";
 import {authMiddleWare} from "../midlewares/auth-middleware";
 import {
-    createBlog,
     findBlogById,
     findBlogs,
     removeBlogById,
     updateBlog
-} from "../repositories/blogs-repository";
+} from "../../store/repositories/blogs-repository";
+import {Blog} from "../../store/store";
+import {CreateBlogRequestModel} from "../models/CreateBlogRequestModel";
+import * as blogsService from "../../core/blogs/blogsService"
 
 
 const createBlogSchema = {
@@ -49,25 +51,35 @@ const createBlogSchema = {
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', (request: Request, response: Response) => {
+blogsRouter.get('/', (request: Request, response: Response<Blog[]>) => {
     response.status(200).send(findBlogs());
 });
 
-blogsRouter.post('/', checkSchema(createBlogSchema), authMiddleWare, inputValidationMadleware, (request: Request, response: Response) => {
-    response.status(201).send(createBlog(request.body));
-});
-
-blogsRouter.put('/:id', checkSchema(createBlogSchema), authMiddleWare, inputValidationMadleware, (request: Request, response: Response) => {
-    let resultUpdate = updateBlog(request.params.id, request.body);
-    if (resultUpdate) {
-        response.sendStatus(204);
-        return;
+blogsRouter.post(
+    '/',
+    checkSchema(createBlogSchema),
+    authMiddleWare,
+    inputValidationMadleware,
+    async (request: CreateBlogRequestModel, response: Response) => {
+        const newBlog = await blogsService.createBlog(request.body)
+        response.status(201).send(newBlog);
     }
-    response.sendStatus(404);
+);
 
-});
+blogsRouter.put('/:id',
+    checkSchema(createBlogSchema),
+    authMiddleWare, inputValidationMadleware,
+    (request: Request<{id:string}, {}, BlogUpdateModel>, response: Response) => {
+        let resultUpdate = updateBlog(request.params.id, request.body);
+        if (resultUpdate) {
+            response.sendStatus(204);
+            return;
+        }
+        response.sendStatus(404);
+    }
+);
 
-blogsRouter.get('/:id', (request: Request, response: Response) => {
+blogsRouter.get('/:id', (request: Request<{id: string}>, response: Response) => {
     const blog = findBlogById(request.params.id)
     if (blog) {
         response.status(200).send(blog);
@@ -76,7 +88,7 @@ blogsRouter.get('/:id', (request: Request, response: Response) => {
     response.sendStatus(404);
 });
 
-blogsRouter.delete('/:id', authMiddleWare, (request: Request, response: Response) => {
+blogsRouter.delete('/:id', authMiddleWare, (request: Request<{id: string}>, response: Response) => {
     const resultDelete = removeBlogById(request.params.id)
 
     if (resultDelete) {

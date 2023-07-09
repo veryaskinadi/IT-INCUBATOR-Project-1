@@ -1,7 +1,7 @@
 import { postSchema } from "./schema"
 import { Request, Response, NextFunction } from "express";
 import {checkSchema, FieldValidationError, validationResult} from "express-validator";
-import {Blog, blogs} from "../../../repositories/store";
+import {Blog, blogs} from "../../../../store/store";
 
 type ValidationError = {
     message: string;

@@ -1,7 +1,8 @@
 import { postSchema } from "./schema"
 import { Request, Response, NextFunction } from "express";
 import {checkSchema, FieldValidationError, validationResult} from "express-validator";
-import {Blog, blogs} from "../../../../store/store";
+import * as blogsService from "../../../../core/blogs/blogsService"
+
 
 type ValidationError = {
     message: string;
@@ -21,7 +22,7 @@ export async function createPostValidator(request: Request, response: Response, 
         }))
     }
 
-    let blog = blogs.find((blog: Blog) => blog.id === request.body.blogId)
+    const blog = await blogsService.getBlog(request.body.blogId)
 
     if (!blog) {
         errorsMessages.push({

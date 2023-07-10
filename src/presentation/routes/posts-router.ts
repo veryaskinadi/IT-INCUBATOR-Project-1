@@ -1,7 +1,9 @@
 import { Request, Response, Router } from "express";
 import { authMiddleWare } from "../midlewares/auth-middleware";
 import { createPostValidator } from "../midlewares/validation/postValidation/validator"
-import {createPost, findPostById, findPosts, updatePost, removePostById} from "../../store/repositories/posts-repository";
+import {findPostById, findPosts, updatePost, removePostById} from "../../store/repositories/posts-repository";
+import * as postsService from "../../core/posts/postsService";
+import {CreatePostRequestModel} from "../models/CreatePostRequestModel";
 
 
 export const postsRouter = Router({});
@@ -10,9 +12,9 @@ postsRouter.get('/', (request: Request, response: Response) => {
     response.status(200).send(findPosts());
 });
 
-postsRouter.post('/', authMiddleWare, createPostValidator, (request: Request, response: Response) => {
-    const post = createPost(request.body, request.body.blogId);
-    response.status(201).send(post)
+postsRouter.post('/', authMiddleWare, createPostValidator, async (request: CreatePostRequestModel, response: Response) => {
+    const newPost = await postsService.createPost(request.body)
+    response.status(201).send(newPost);
 });
 
 postsRouter.put('/:id', authMiddleWare, createPostValidator, (request: Request, response: Response) => {

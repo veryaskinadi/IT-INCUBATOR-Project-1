@@ -1,19 +1,18 @@
-import {posts, Post, blogs} from "../store";
+import {posts, Post} from "../store";
+import {CreatePostStoreModel} from "../models/CreatePostStoreModel";
+import {PostStoreModel} from "../models/PostStoreModel";
+import {client} from "../bd";
+
+export const postsCollection = client.db().collection('posts');
 
 export const findPosts = () => {return posts}
 
-export const createPost = (data: any, blogId: string) => {
-    let blog = blogs.find((blog: any) => blog.id === blogId)
-    if (!blog) {
-        return null
-    }
-    const newPost = {
-        blogName: blog.name,
+export const createPost = async (data: CreatePostStoreModel): Promise<PostStoreModel> => {
+    const result = await postsCollection.insertOne({...data});
+    return {
         ...data,
+        id: result.insertedId.toString(),
     }
-    newPost.id = String(+(new Date()))
-    posts.push(newPost);
-    return newPost;
 }
 
 export const updatePost = (id: string, data: any) => {

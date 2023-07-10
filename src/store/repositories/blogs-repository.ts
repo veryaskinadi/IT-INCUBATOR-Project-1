@@ -1,11 +1,22 @@
 import {Blog, blogs} from "../store";
 import {CreateBlogStoreModel} from "../models/CreateBlogStoreModel";
 import {BlogStoreModel} from "../models/BlogStoreModel";
-import {client} from "../bd";
+import {client, ObjId} from "../bd";
+import {UpdateBlogModel} from "../models/UpdateBlogModel";
 
 const blogsCollection = client.db().collection('blogs');
 
-export const findBlogs = () => {return blogs}
+export const getAllBlogs = async (): Promise<BlogStoreModel[]> => {
+    const blogs = await blogsCollection.find({}).toArray();
+    const allBlogs = blogs.map(blog => ({
+        id: blog._id.toString(),
+        name: blog.name,
+        description: blog.description,
+        websiteUrl: blog.websiteUrl,
+        createdAt: blog.createdAt,
+    }));
+    return allBlogs;
+}
 
 export const createBlog = async (data: CreateBlogStoreModel): Promise<BlogStoreModel> => {
     const result = await blogsCollection.insertOne({...data});
@@ -15,15 +26,9 @@ export const createBlog = async (data: CreateBlogStoreModel): Promise<BlogStoreM
     }
 }
 
-export const updateBlog = (id: string, data: any) => {
-    let blog = blogs.find((blog: Blog) => blog.id === id)
-
-    if (!blog) {
-        return false
-    }
-
-    blog = Object.assign(blog, data)
-    return true
+export const updateBlog = async (id: string, data: UpdateBlogModel) => {
+    await blogsCollection.updateOne({_id: new ObjId(id)}, { $set: data})
+    return true;
 }
 
 export const findBlogById = (id: string) => {

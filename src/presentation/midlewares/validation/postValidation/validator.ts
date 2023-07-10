@@ -22,6 +22,7 @@ export async function createPostValidator(request: Request, response: Response, 
     }
 
     let blog = blogs.find((blog: Blog) => blog.id === request.body.blogId)
+
     if (!blog) {
         errorsMessages.push({
             message: "Неверный blogId",

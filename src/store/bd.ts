@@ -9,6 +9,8 @@ export type Post = {
     _id?: ObjectId;
 }
 
+export const ObjId = ObjectId;
+
 const url = "mongodb+srv://veryaskinadi:ITPROJECT01@itproject01.l2ugdjm.mongodb.net/?retryWrites=true&w=majority"
 export const client = new MongoClient(url);
 

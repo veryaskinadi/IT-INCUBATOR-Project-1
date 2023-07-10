@@ -3,7 +3,6 @@ import {validationResult, FieldValidationError} from "express-validator";
 
 export const inputValidationMadleware = (request: Request, response: Response, next: NextFunction) => {
     const errors = validationResult(request);
-    console.log(errors);
 
     if(!errors.isEmpty()){
         const errorsMessages = errors.array({ onlyFirstError: true }).map(error => ({

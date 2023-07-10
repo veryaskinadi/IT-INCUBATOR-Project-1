@@ -1,6 +1,3 @@
-// import {CustomValidator} from "express-validator";
-// import {Blog, blogs} from "../../../routes/blogs-router";
-
 export const postSchema = {
     title: {
         exists: true,

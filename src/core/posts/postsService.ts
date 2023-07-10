@@ -3,6 +3,7 @@ import {Post} from "../models/postModel";
 import * as blogsService from "../blogs/blogsService";
 import {CreatePostModel} from "../models/CreatePostModel";
 import {Blog} from "../models/blogModel";
+import {UpdatePostModel} from "../models/UpdatePostModel";
 
 export const createPost = async (data: CreatePostModel): Promise<Post> => {
 
@@ -20,4 +21,26 @@ export const createPost = async (data: CreatePostModel): Promise<Post> => {
     }
 
     return newPost;
+}
+
+export const updatePost = async (id: string, data: UpdatePostModel) => {
+    try {
+        await postsRepository.updatePost(id, data);
+        return true;
+    } catch (error) {
+        console.log("error: ", error);
+        return false;
+    }
+}
+
+export const getAllPosts = async (): Promise<Post[]> => {
+
+    const posts = await postsRepository.getAllPosts()
+
+    const allPosts = posts.map( post => ({
+            ...post,
+            blogName: blog.name,
+        })
+    )
+    return allPosts;
 }

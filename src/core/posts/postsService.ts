@@ -21,7 +21,7 @@ export const createPost = async (data: CreatePostModel): Promise<Post> => {
     }
 
     return newPost;
-}
+};
 
 export const updatePost = async (id: string, data: UpdatePostModel) => {
     try {
@@ -31,7 +31,7 @@ export const updatePost = async (id: string, data: UpdatePostModel) => {
         console.log("error: ", error);
         return false;
     }
-}
+};
 
 export const getAllPosts = async (): Promise<Post[]> => {
 
@@ -43,4 +43,25 @@ export const getAllPosts = async (): Promise<Post[]> => {
         })
     )
     return allPosts;
+}
+
+export const getPost = async (id: string): Promise<Post | null> => {
+    const postResult = await postsRepository.getPostById(id)
+    if (!postResult) {
+        return null;
+    }
+    const post = {
+        ...postResult,
+        blogName: blog.name,
+    }
+    return post;
+};
+
+export const deletePost = async (id: string) => {
+    try {
+        await postsRepository.deletePostById(id);
+        return true;
+    } catch (error) {
+        return false;
+    }
 }

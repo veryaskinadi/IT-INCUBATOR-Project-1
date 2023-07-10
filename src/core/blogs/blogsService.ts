@@ -15,7 +15,7 @@ export const createBlog = async (data: CreateBlogModel): Promise<Blog> => {
         ...newBlog,
         isMembership: false,
     };
-}
+};
 
 export const getAllBlogs = async (): Promise<Blog[]> => {
     const blogs = await blogsRepository.getAllBlogs()
@@ -25,7 +25,7 @@ export const getAllBlogs = async (): Promise<Blog[]> => {
         })
     )
     return allBlogs;
-}
+};
 
 export const updateBlog = async(id: string, data: UpdateBlogModel) => {
     try {
@@ -35,7 +35,7 @@ export const updateBlog = async(id: string, data: UpdateBlogModel) => {
         console.log("error: ", error);
         return false;
     }
-}
+};
 
 export const getBlog = async (id: string): Promise<Blog | null> => {
     const blogResult = await blogsRepository.getBlogById(id)
@@ -45,9 +45,9 @@ export const getBlog = async (id: string): Promise<Blog | null> => {
     const blog = {
         ...blogResult,
         isMembership: false,
-    }
+    };
     return blog;
-}
+};
 
 export const deleteBlog = async (id: string) => {
     try {
@@ -56,4 +56,4 @@ export const deleteBlog = async (id: string) => {
     } catch (error) {
         return false;
     }
-}
+};

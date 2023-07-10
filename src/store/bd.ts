@@ -20,7 +20,6 @@ export const runDb = async () => {
     try {
         await client.connect();
     } catch (e) {
-        console.log(e)
         await client.close();
     }
 }

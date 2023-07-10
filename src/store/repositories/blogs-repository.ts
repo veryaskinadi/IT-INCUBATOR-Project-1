@@ -1,4 +1,4 @@
-import {Blog, blogs} from "../store";
+import {blogs} from "../store";
 import {CreateBlogStoreModel} from "../models/CreateBlogStoreModel";
 import {BlogStoreModel} from "../models/BlogStoreModel";
 import {client, ObjId} from "../bd";
@@ -27,26 +27,30 @@ export const createBlog = async (data: CreateBlogStoreModel): Promise<BlogStoreM
 }
 
 export const updateBlog = async (id: string, data: UpdateBlogModel) => {
-    await blogsCollection.updateOne({_id: new ObjId(id)}, { $set: data})
+    await blogsCollection.updateOne({_id: new ObjId(id)}, { $set: data});
     return true;
 }
 
-export const findBlogById = (id: string) => {
-    const blog = blogs.find((blog: Blog) => blog.id === id)
-    if (blog) {
-        return blog;
-    } else {
+export const getBlogById = async (id: string): Promise<BlogStoreModel | null>  => {
+    try {
+        const blog = await blogsCollection.findOne({_id: new ObjId(id)});
+        if (!blog) {
+            throw new Error('Not found');
+        }
+        return {
+            id: blog._id.toString(),
+            name: blog.name,
+            description: blog.description,
+            websiteUrl: blog.websiteUrl,
+            createdAt: blog.createdAt,
+        }
+    } catch(error) {
         return null;
     }
+
 }
 
-export const removeBlogById = (id: string) => {
-    let blogIndex = blogs.findIndex(b => b.id === id)
-
-    if (blogIndex === -1) {
-        return false;
-    }
-
-    blogs.splice(blogIndex, 1)
+export const deleteBlogById = async (id: string) => {
+    const result = await blogsCollection.deleteOne({_id: new ObjId(id)});
     return true;
 }

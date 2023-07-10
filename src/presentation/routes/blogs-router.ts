@@ -1,9 +1,5 @@
 import {Request, Response, Router} from "express";
 import {authMiddleWare} from "../midlewares/auth-middleware";
-import {
-    findBlogById,
-    removeBlogById,
-} from "../../store/repositories/blogs-repository";
 import {CreateBlogRequestModel} from "../models/CreateBlogRequestModel";
 import * as blogsService from "../../core/blogs/blogsService";
 import {createBlogValidator, updateBlogValidator} from "../midlewares/validation/blogValidation/validator";
@@ -39,8 +35,8 @@ blogsRouter.put('/:id',
     }
 );
 
-blogsRouter.get('/:id', (request: Request<{id: string}>, response: Response) => {
-    const blog = findBlogById(request.params.id)
+blogsRouter.get('/:id', async (request: Request<{id: string}>, response: Response) => {
+    const blog = await blogsService.getBlog(request.params.id)
     if (blog) {
         response.status(200).send(blog);
         return;
@@ -48,14 +44,14 @@ blogsRouter.get('/:id', (request: Request<{id: string}>, response: Response) => 
     response.sendStatus(404);
 });
 
-blogsRouter.delete('/:id', authMiddleWare, (request: Request<{id: string}>, response: Response) => {
-    const resultDelete = removeBlogById(request.params.id)
+blogsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>, response: Response) => {
+    const resultDelete = await blogsService.deleteBlog(request.params.id)
 
     if (resultDelete) {
         response.sendStatus(204);
         return;
     }
 
-    response.sendStatus(204);
+    response.sendStatus(404);
 });
 

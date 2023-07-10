@@ -36,3 +36,24 @@ export const updateBlog = async(id: string, data: UpdateBlogModel) => {
         return false;
     }
 }
+
+export const getBlog = async (id: string): Promise<Blog | null> => {
+    const blogResult = await blogsRepository.getBlogById(id)
+    if (!blogResult) {
+        return null;
+    }
+    const blog = {
+        ...blogResult,
+        isMembership: false,
+    }
+    return blog;
+}
+
+export const deleteBlog = async (id: string) => {
+    try {
+        await blogsRepository.deleteBlogById(id);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}

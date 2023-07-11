@@ -51,6 +51,11 @@ export const getBlogById = async (id: string): Promise<BlogStoreModel | null>  =
 }
 
 export const deleteBlogById = async (id: string) => {
-    const result = await blogsCollection.deleteOne({_id: new ObjId(id)});
+    await blogsCollection.deleteOne({_id: new ObjId(id)});
+    return true;
+}
+
+export const deleteBlogs = async () => {
+    await blogsCollection.deleteMany({});
     return true;
 }

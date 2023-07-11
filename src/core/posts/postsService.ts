@@ -74,3 +74,12 @@ export const deletePost = async (id: string) => {
         return false;
     }
 }
+
+export const deletePosts = async () => {
+    try {
+        await postsRepository.deletePosts();
+        return true;
+    } catch (error) {
+        return false;
+    }
+}

@@ -57,3 +57,12 @@ export const deleteBlog = async (id: string) => {
         return false;
     }
 };
+
+export const deleteBlogs = async () => {
+    try {
+        await blogsRepository.deleteBlogs();
+        return true;
+    } catch (error) {
+        return false;
+    }
+}

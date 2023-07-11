@@ -1,21 +1,45 @@
 import {posts} from "../store";
 import {CreatePostStoreModel} from "../models/CreatePostStoreModel";
-import {PostStoreModel} from "../models/PostStoreModel";
+import {PostStoreModel, PostStoreModelWithBlog} from "../models/PostStoreModel";
 import {client, ObjId} from "../bd";
 import {UpdateBlogModel} from "../models/UpdatePostModel";
 
 export const postsCollection = client.db().collection('posts');
 
-export const getAllPosts = async (): Promise<PostStoreModel[]> => {
-    const posts = await postsCollection.find({}).toArray();
-    const allPosts = posts.map(post => ({
-        id: post._id.toString(),
-        title: post.title,
-        shortDescription: post.shortDescription,
-        content: post.content,
-        blogId: post.blogId,
-        createdAt: post.createdAt
-    }));
+export const getAllPosts = async (): Promise<PostStoreModelWithBlog[]> => {
+    const posts = await postsCollection.aggregate([
+        {
+            $lookup: {
+                from: "blogs",
+                localField: "blogId",
+                foreignField: "_id",
+                as: "blogs"
+            }
+        }
+    ]).toArray();
+
+    const allPosts = posts.map(post => {
+        const preparedPost: PostStoreModelWithBlog = {
+            id: post._id.toString(),
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            createdAt: post.createdAt,
+            blogId: post.blogId
+        }
+
+        if (post.blogs.length > 0) {
+            preparedPost.blog = {
+                id: post.blogs[0]._id.toString,
+                name: post.blogs[0].name,
+                description: post.blogs[0].description,
+                websiteUrl: post.blogs[0].websiteUrl,
+                createdAt: post.blogs[0].createdAt,
+            }
+        }
+       return preparedPost;
+    });
+
     return allPosts;
 }
 
@@ -38,7 +62,7 @@ export const updatePost = async (id: string, data: UpdateBlogModel) => {
     return true;
 }
 
-export const getPostById = async (id: string): Promise<PostStoreModel | null> => {
+export const getPostById = async (id: string): Promise<PostStoreModelWithBlog | null> => {
     try {
         const post = await postsCollection.findOne({_id: new ObjId(id)});
         if (!post) {

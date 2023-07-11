@@ -38,18 +38,27 @@ export const getAllPosts = async (): Promise<Post[]> => {
     const posts = await postsRepository.getAllPosts()
 
     const allPosts = posts.map( post => ({
-            ...post,
-            blogName: blog.name,
+        id: post.id,
+        title: post.title,
+        shortDescription: post.shortDescription,
+        content: post.content,
+        blogId: post.blogId,
+        blogName: post.blog?.name,
+        createdAt: post.createdAt,
         })
     )
+
     return allPosts;
 }
 
-export const getPost = async (id: string): Promise<Post | null> => {
+export const getPostById = async (id: string): Promise<Post | null> => {
+
     const postResult = await postsRepository.getPostById(id)
     if (!postResult) {
         return null;
     }
+    const blog = await blogsService.getBlog(postResult.blogId) as Blog;
+
     const post = {
         ...postResult,
         blogName: blog.name,

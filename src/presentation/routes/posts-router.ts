@@ -20,14 +20,14 @@ postsRouter.post('/', authMiddleWare, createPostValidator, async (request: Creat
 postsRouter.put('/:id', authMiddleWare, updatePostValidator, async (request: UpdatePostRequestModel, response: Response) => {
     const resultUpdate = await postsService.updatePost(request.params.id, request.body)
     if (resultUpdate) {
-        response.status(204);
+        response.sendStatus(204);
         return;
     }
     response.sendStatus(404);
 });
 
 postsRouter.get('/:id', async (request: Request<{id: string}>, response: Response) => {
-    const post = await postsService.getPost(request.params.id)
+    const post = await postsService.getPostById(request.params.id)
     if (post) {
         response.status(200).send(post);
         return;

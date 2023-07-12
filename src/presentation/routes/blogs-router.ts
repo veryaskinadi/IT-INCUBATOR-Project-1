@@ -37,21 +37,24 @@ blogsRouter.put('/:id',
 
 blogsRouter.get('/:id', async (request: Request<{id: string}>, response: Response) => {
     const blog = await blogsService.getBlog(request.params.id)
-    if (blog) {
-        response.status(200).send(blog);
+
+    if (!blog) {
+        response.sendStatus(404);
         return;
     }
-    response.sendStatus(404);
+    response.status(200).send(blog);
+
 });
 
 blogsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>, response: Response) => {
-    const resultDelete = await blogsService.deleteBlog(request.params.id)
+    const blog = await blogsService.getBlog(request.params.id)
 
-    if (resultDelete) {
-        response.sendStatus(204);
+    if (!blog) {
+        response.sendStatus(404);
         return;
     }
+    await blogsService.deleteBlog(request.params.id)
 
-    response.sendStatus(404);
+    response.sendStatus(204);
 });
 

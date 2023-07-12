@@ -81,9 +81,8 @@ export const getPostById = async (id: string): Promise<PostStoreModelWithBlog | 
     }
 }
 
-export const deletePostById = async (id: string) => {
+export const deletePostById = async (id: string): Promise<void> => {
     await postsCollection.deleteOne({_id: new ObjId(id)});
-    return true;
 }
 
 export const deletePosts = async () => {

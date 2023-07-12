@@ -49,13 +49,8 @@ export const getBlog = async (id: string): Promise<Blog | null> => {
     return blog;
 };
 
-export const deleteBlog = async (id: string) => {
-    try {
-        await blogsRepository.deleteBlogById(id);
-        return true;
-    } catch (error) {
-        return false;
-    }
+export const deleteBlog = async (id: string): Promise<void> => {
+    await blogsRepository.deleteBlogById(id);
 };
 
 export const deleteBlogs = async () => {

@@ -66,13 +66,8 @@ export const getPostById = async (id: string): Promise<Post | null> => {
     return post;
 };
 
-export const deletePost = async (id: string) => {
-    try {
-        await postsRepository.deletePostById(id);
-        return true;
-    } catch (error) {
-        return false;
-    }
+export const deletePost = async (id: string): Promise<void> => {
+    await postsRepository.deletePostById(id);
 }
 
 export const deletePosts = async () => {

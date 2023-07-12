@@ -28,21 +28,26 @@ postsRouter.put('/:id', authMiddleWare, updatePostValidator, async (request: Upd
 
 postsRouter.get('/:id', async (request: Request<{id: string}>, response: Response) => {
     const post = await postsService.getPostById(request.params.id)
-    if (post) {
-        response.status(200).send(post);
+
+    if (!post) {
+        response.sendStatus(404)
         return;
     }
-    response.sendStatus(404)
+
+    response.status(200).send(post);
 });
 
 postsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>, response: Response) => {
-    const resultDelete = await postsService.deletePost(request.params.id)
+    const post = await postsService.getPostById(request.params.id)
 
-    if (resultDelete) {
-        response.sendStatus(204);
+    if (!post) {
+        response.sendStatus(404)
         return;
     }
 
-    response.sendStatus(404);
+    await postsService.deletePost(request.params.id)
+
+    response.sendStatus(204);
+
 });
 

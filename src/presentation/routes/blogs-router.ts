@@ -14,8 +14,8 @@ blogsRouter.get('/', async (request: Request, response: Response) => {
 
 blogsRouter.post(
     '/',
-    createBlogValidator,
     authMiddleWare,
+    createBlogValidator,
     async (request: CreateBlogRequestModel, response: Response) => {
         const newBlog = await blogsService.createBlog(request.body)
         response.status(201).send(newBlog);
@@ -23,8 +23,8 @@ blogsRouter.post(
 );
 
 blogsRouter.put('/:id',
-    updateBlogValidator,
     authMiddleWare,
+    updateBlogValidator,
     async (request: UpdateBlogRequestModel, response: Response) => {
         const resultUpdate = await blogsService.updateBlog(request.params.id, request.body)
         if (resultUpdate) {

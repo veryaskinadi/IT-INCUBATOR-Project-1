@@ -23,14 +23,8 @@ export const createPost = async (data: CreatePostModel): Promise<Post> => {
     return newPost;
 };
 
-export const updatePost = async (id: string, data: UpdatePostModel) => {
-    try {
-        await postsRepository.updatePost(id, data);
-        return true;
-    } catch (error) {
-        console.log("error: ", error);
-        return false;
-    }
+export const updatePost = async (id: string, data: UpdatePostModel): Promise<void> => {
+    await postsRepository.updatePost(id, data);
 };
 
 export const getAllPosts = async (): Promise<Post[]> => {

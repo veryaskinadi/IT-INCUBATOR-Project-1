@@ -27,14 +27,8 @@ export const getAllBlogs = async (): Promise<Blog[]> => {
     return allBlogs;
 };
 
-export const updateBlog = async(id: string, data: UpdateBlogModel) => {
-    try {
-        await blogsRepository.updateBlog(id, data);
-        return true;
-    } catch (error) {
-        console.log("error: ", error);
-        return false;
-    }
+export const updateBlog = async(id: string, data: UpdateBlogModel): Promise<void> => {
+    await blogsRepository.updateBlog(id, data);
 };
 
 export const getBlog = async (id: string): Promise<Blog | null> => {

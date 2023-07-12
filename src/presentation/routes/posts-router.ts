@@ -18,11 +18,15 @@ postsRouter.post('/', authMiddleWare, createPostValidator, async (request: Creat
 });
 
 postsRouter.put('/:id', authMiddleWare, updatePostValidator, async (request: UpdatePostRequestModel, response: Response) => {
-    const resultUpdate = await postsService.updatePost(request.params.id, request.body)
-    if (resultUpdate) {
-        response.sendStatus(204);
+    const post = await postsService.getPostById(request.params.id)
+
+    if (!post) {
+        response.sendStatus(404)
         return;
     }
+
+    await postsService.updatePost(request.params.id, request.body)
+
     response.sendStatus(404);
 });
 

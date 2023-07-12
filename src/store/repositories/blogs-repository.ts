@@ -26,9 +26,8 @@ export const createBlog = async (data: CreateBlogStoreModel): Promise<BlogStoreM
     }
 }
 
-export const updateBlog = async (id: string, data: UpdateBlogModel) => {
+export const updateBlog = async (id: string, data: UpdateBlogModel): Promise<void> => {
     await blogsCollection.updateOne({_id: new ObjId(id)}, { $set: data});
-    return true;
 }
 
 export const getBlogById = async (id: string): Promise<BlogStoreModel | null>  => {

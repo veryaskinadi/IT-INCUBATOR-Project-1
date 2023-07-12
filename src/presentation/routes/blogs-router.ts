@@ -26,12 +26,16 @@ blogsRouter.put('/:id',
     authMiddleWare,
     updateBlogValidator,
     async (request: UpdateBlogRequestModel, response: Response) => {
-        const resultUpdate = await blogsService.updateBlog(request.params.id, request.body)
-        if (resultUpdate) {
-            response.sendStatus(204);
+        const blog = await blogsService.getBlog(request.params.id)
+
+        if (!blog) {
+            response.sendStatus(404);
             return;
         }
-        response.sendStatus(404);
+
+        await blogsService.updateBlog(request.params.id, request.body)
+
+        response.sendStatus(204);
     }
 );
 

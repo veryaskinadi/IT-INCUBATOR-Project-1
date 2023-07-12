@@ -54,12 +54,11 @@ export const createPost = async (data: CreatePostStoreModel): Promise<PostStoreM
     }
 }
 
-export const updatePost = async (id: string, data: UpdateBlogModel) => {
+export const updatePost = async (id: string, data: UpdateBlogModel): Promise<void> => {
     await postsCollection.updateOne({_id: new ObjId(id)}, { $set: {
         ...data,
         blogId: new ObjId(data.blogId)
     }});
-    return true;
 }
 
 export const getPostById = async (id: string): Promise<PostStoreModelWithBlog | null> => {

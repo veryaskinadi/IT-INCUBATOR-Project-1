@@ -27,7 +27,7 @@ postsRouter.put('/:id', authMiddleWare, updatePostValidator, async (request: Upd
 
     await postsService.updatePost(request.params.id, request.body)
 
-    response.sendStatus(404);
+    response.sendStatus(204);
 });
 
 postsRouter.get('/:id', async (request: Request<{id: string}>, response: Response) => {

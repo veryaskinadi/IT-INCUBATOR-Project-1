@@ -2,6 +2,8 @@ import * as blogsRepository from "../../store/repositories/blogs-repository";
 import {CreateBlogModel} from "../models/CreateBlogModel";
 import {Blog} from "../models/blogModel";
 import {UpdateBlogModel} from "../models/UpdateBlogModel";
+import {Paginator} from "../models/Paginator";
+import {GetQueryModel} from "../models/GetQueryModel";
 
 export const createBlog = async (data: CreateBlogModel): Promise<Blog> => {
     const newData = {
@@ -17,14 +19,21 @@ export const createBlog = async (data: CreateBlogModel): Promise<Blog> => {
     };
 };
 
-export const getAllBlogs = async (): Promise<Blog[]> => {
-    const blogs = await blogsRepository.getAllBlogs()
-    const allBlogs = blogs.map( blog => ({
+export const getAllBlogs = async (data: GetQueryModel): Promise<Paginator<Blog>> => {
+    const blogsPaginator = await blogsRepository.getAllBlogs(data)
+    const allBlogs = blogsPaginator.items.map(blog => ({
             ...blog,
             isMembership: false,
         })
     )
-    return allBlogs;
+
+    return {
+        pagesCount: blogsPaginator.pagesCount,
+        page: blogsPaginator.page,
+        pageSize: blogsPaginator.pageSize,
+        totalCount: blogsPaginator.totalCount,
+        items: allBlogs,
+    }
 };
 
 export const updateBlog = async(id: string, data: UpdateBlogModel): Promise<void> => {

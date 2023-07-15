@@ -8,7 +8,13 @@ import {UpdateBlogRequestModel} from "../models/UpdateBlogRequestModel";
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (request: Request, response: Response) => {
-    const blog = await blogsService.getAllBlogs()
+    const blog = await blogsService.getAllBlogs({
+        searchNameTerm: String(request.query.searchNameTerm),
+        sortBy: String(request.query.sortBy),
+        sortDirection: String(request.query.sortDirection),
+        pageNumber: Number(request.query.pageNumber),
+        pageSize: Number(request.query.pageSize),
+    })
     response.status(200).send(blog);
 });
 
@@ -61,4 +67,6 @@ blogsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>
 
     response.sendStatus(204);
 });
+
+
 

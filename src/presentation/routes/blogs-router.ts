@@ -4,6 +4,9 @@ import {CreateBlogRequestModel} from "../models/CreateBlogRequestModel";
 import * as blogsService from "../../core/blogs/blogsService";
 import {createBlogValidator, updateBlogValidator} from "../midlewares/validation/blogValidation/validator";
 import {UpdateBlogRequestModel} from "../models/UpdateBlogRequestModel";
+import {createPostByIdValidator} from "../midlewares/validation/postValidation/validator";
+import {CreatePostByBlogIdRequestModel} from "../models/CreatePostByBlogIdRequestModel";
+import * as postsService from "../../core/posts/postsService";
 
 export const blogsRouter = Router({})
 
@@ -68,5 +71,14 @@ blogsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>
     response.sendStatus(204);
 });
 
+blogsRouter.post('/:blogId/posts', authMiddleWare, createPostByIdValidator, async (request: CreatePostByBlogIdRequestModel, response: Response) => {
 
+    const createPostData = {
+        blogId: request.params.blogId,
+        ...request.body,
+    }
+
+    const newPost = await postsService.createPost(createPostData)
+    response.status(201).send(newPost);
+});
 

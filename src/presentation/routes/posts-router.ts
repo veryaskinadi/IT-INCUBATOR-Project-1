@@ -55,8 +55,3 @@ postsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>
 
 });
 
-postsRouter.post('/:blogId/posts', authMiddleWare, createPostValidator, async (request: CreatePostRequestModel, response: Response) => {
-    const newPost = await postsService.createPost(request.body)
-    response.status(201).send(newPost);
-});
-

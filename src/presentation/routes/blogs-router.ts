@@ -12,11 +12,11 @@ export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (request: Request, response: Response) => {
     const blog = await blogsService.getAllBlogs({
-        searchNameTerm: String(request.query.searchNameTerm),
-        sortBy: String(request.query.sortBy),
-        sortDirection: String(request.query.sortDirection),
-        pageNumber: Number(request.query.pageNumber),
-        pageSize: Number(request.query.pageSize),
+        searchNameTerm: request.query.searchNameTerm ? String(request.query.searchNameTerm) : undefined,
+        sortBy: request.query.sortBy ? String(request.query.sortBy) : 'createdAt',
+        sortDirection: request.query.sortDirection ? String(request.query.sortDirection) : 'desc',
+        pageNumber: request.query.pageNumber ? Number(request.query.pageNumber) : 1,
+        pageSize: request.query.pageSize ? Number(request.query.pageSize) : 10,
     })
     response.status(200).send(blog);
 });
@@ -80,5 +80,16 @@ blogsRouter.post('/:blogId/posts', authMiddleWare, createPostByIdValidator, asyn
 
     const newPost = await postsService.createPost(createPostData)
     response.status(201).send(newPost);
+});
+
+blogsRouter.get('/:blogId/posts', async (request: Request<{blogId: string;}, {}, {}>, response: Response) => {
+    const post = await postsService.getPosts({
+        filter: {blogId: String(request.params.blogId)},
+        pageNumber: Number(request.query.pageNumber),
+        pageSize: Number(request.query.pageSize),
+        sortBy: String(request.query.sortBy),
+        sortDirection: String(request.query.sortDirection),
+    })
+    response.status(200).send(post);
 });
 

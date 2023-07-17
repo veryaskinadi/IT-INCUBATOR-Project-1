@@ -4,6 +4,8 @@ import * as blogsService from "../blogs/blogsService";
 import {CreatePostModel} from "../models/CreatePostModel";
 import {Blog} from "../models/blogModel";
 import {UpdatePostModel} from "../models/UpdatePostModel";
+import {GetPostsQueryModel} from "../models/GetPostsQueryModel";
+import {Paginator} from "../models/Paginator";
 
 export const createPost = async (data: CreatePostModel): Promise<Post> => {
 
@@ -27,11 +29,11 @@ export const updatePost = async (id: string, data: UpdatePostModel): Promise<voi
     await postsRepository.updatePost(id, data);
 };
 
-export const getAllPosts = async (): Promise<Post[]> => {
+export const getPosts = async (data: GetPostsQueryModel): Promise<Paginator<Post>> => {
 
-    const posts = await postsRepository.getAllPosts()
+    const postsPaginator = await postsRepository.getPosts(data)
 
-    const allPosts = posts.map( post => ({
+    const allPosts = postsPaginator.items.map( post => ({
         id: post.id,
         title: post.title,
         shortDescription: post.shortDescription,
@@ -42,7 +44,13 @@ export const getAllPosts = async (): Promise<Post[]> => {
         })
     )
 
-    return allPosts;
+    return {
+        pagesCount: postsPaginator.pagesCount,
+        page: postsPaginator.page,
+        pageSize: postsPaginator.pageSize,
+        totalCount: postsPaginator.totalCount,
+        items: allPosts,
+    };
 }
 
 export const getPostById = async (id: string): Promise<Post | null> => {

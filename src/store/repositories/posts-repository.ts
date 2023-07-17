@@ -2,12 +2,19 @@ import {posts} from "../store";
 import {CreatePostStoreModel} from "../models/CreatePostStoreModel";
 import {PostStoreModel, PostStoreModelWithBlog} from "../models/PostStoreModel";
 import {client, ObjId} from "../bd";
+import {Document} from "mongodb";
 import {UpdateBlogModel} from "../models/UpdatePostModel";
+import {GetPostsModel} from "../models/GetPostsModel";
+import {Paginator} from "../models/Paginator";
 
 export const postsCollection = client.db().collection('posts');
 
-export const getAllPosts = async (): Promise<PostStoreModelWithBlog[]> => {
-    const posts = await postsCollection.aggregate([
+export const getPosts = async (data: GetPostsModel): Promise<Paginator<PostStoreModelWithBlog>> => {
+
+    const offset = (data.pageNumber - 1) * data.pageSize;
+    const sortBy = data.sortBy;
+
+    const aggregatePipeline: Document[] = [
         {
             $lookup: {
                 from: "blogs",
@@ -15,8 +22,30 @@ export const getAllPosts = async (): Promise<PostStoreModelWithBlog[]> => {
                 foreignField: "_id",
                 as: "blogs"
             }
-        }
-    ]).toArray();
+        },
+        { $sort: {[sortBy]: data.sortDirection === 'asc' ? 1 : -1} },
+        { $skip: offset },
+        { $limit: data.pageSize },
+    ];
+
+    if (data.filter?.blogId) {
+        aggregatePipeline.unshift({
+            $match: { blogId: new ObjId(data.filter.blogId) }
+        })
+    }
+
+    const posts = await postsCollection
+        .aggregate(aggregatePipeline)
+        .toArray();
+
+    const postsTotalCount = await postsCollection
+        .aggregate([
+            ...aggregatePipeline,
+            { $count: "totalCount"},
+        ])
+        .toArray()
+
+    const pagesCount = Math.ceil(postsTotalCount[0].totalCount / data.pageSize);
 
     const allPosts = posts.map(post => {
         const preparedPost: PostStoreModelWithBlog = {
@@ -40,7 +69,13 @@ export const getAllPosts = async (): Promise<PostStoreModelWithBlog[]> => {
        return preparedPost;
     });
 
-    return allPosts;
+    return {
+        pagesCount: pagesCount,
+        page: data.pageNumber,
+        pageSize: data.pageSize,
+        totalCount: postsTotalCount[0].totalCount,
+        items: allPosts,
+    };
 }
 
 export const createPost = async (data: CreatePostStoreModel): Promise<PostStoreModel> => {

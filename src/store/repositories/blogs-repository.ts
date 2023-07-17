@@ -2,6 +2,7 @@ import {blogs} from "../store";
 import {CreateBlogStoreModel} from "../models/CreateBlogStoreModel";
 import {BlogStoreModel} from "../models/BlogStoreModel";
 import {client, ObjId} from "../bd";
+import {Document} from "mongodb";
 import {UpdateBlogModel} from "../models/UpdateBlogModel";
 import {GetBlogsModel} from "../models/GetBlogsModel";
 import {Paginator} from "../models/Paginator";
@@ -10,30 +11,34 @@ const blogsCollection = client.db().collection('blogs');
 
 export const getAllBlogs = async (data: GetBlogsModel): Promise<Paginator<BlogStoreModel>> => {
 
-    const searchNameTerm = new RegExp(`${data.searchNameTerm}`, 'i');
     const offset = (data.pageNumber - 1) * data.pageSize;
-    const sortBy = data.sortBy || "createdAt";
+    const sortBy = data.sortBy;
+
+    const aggregatePipeline: Document[] = [
+        { $sort: {[sortBy]: data.sortDirection === 'asc' ? 1 : -1} },
+        { $skip: offset },
+        { $limit: data.pageSize },
+    ];
+
+    if (data.searchNameTerm) {
+        const searchNameTerm = new RegExp(`${data.searchNameTerm}`, 'i');
+        aggregatePipeline.unshift({
+            $match: {name: {$regex: searchNameTerm}}
+        })
+    }
 
     const blogs = await blogsCollection
-        .aggregate([
-            { $match: {name: {$regex: searchNameTerm}} },
-            { $sort: {[sortBy]: data.sortDirection === 'asc' ? 1 : -1} },
-            { $skip: offset },
-            { $limit: data.pageSize },
-        ])
+        .aggregate(aggregatePipeline)
         .toArray()
 
     const blogsTotalCount = await blogsCollection
         .aggregate([
-            {$sort: {[sortBy]: data.sortDirection === 'asc' ? 1 : -1}},
-            {$match: {name: {$regex: searchNameTerm}}},
-            { $skip: offset },
-            { $limit: data.pageSize },
+            ...aggregatePipeline,
             { $count: "totalCount"},
         ])
         .toArray()
 
-   const pagesCount = Math.ceil(blogsTotalCount[0].totalCount / data.pageSize)
+   const pagesCount = Math.ceil(blogsTotalCount[0].totalCount / data.pageSize );
 
     const allBlogs = blogs.map((blog:any) => ({
         id: blog._id.toString(),
@@ -45,7 +50,7 @@ export const getAllBlogs = async (data: GetBlogsModel): Promise<Paginator<BlogSt
 
     return {
         pagesCount: pagesCount,
-        page: data.pageNumber ,
+        page: data.pageNumber,
         pageSize: data.pageSize,
         totalCount: blogsTotalCount[0].totalCount,
         items: allBlogs,

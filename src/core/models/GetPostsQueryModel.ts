@@ -1,5 +1,5 @@
-export type GetQueryModel = {
-    searchNameTerm?: string,
+export type GetPostsQueryModel = {
+    filter?: {blogId: string},
     sortBy: string,
     sortDirection: string,
     pageNumber: number,

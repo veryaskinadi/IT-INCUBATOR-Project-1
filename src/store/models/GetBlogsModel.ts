@@ -1,5 +1,5 @@
 export type GetBlogsModel= {
-    searchNameTerm: string,
+    searchNameTerm?: string,
     sortBy: string,
     sortDirection: string,
     pageNumber: number,

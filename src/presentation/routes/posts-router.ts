@@ -8,7 +8,12 @@ import {UpdatePostRequestModel} from "../models/UpdatePostRequestModel";
 export const postsRouter = Router({});
 
 postsRouter.get('/', async (request: Request, response: Response) => {
-    const post = await postsService.getAllPosts()
+    const post = await postsService.getPosts({
+        sortBy: request.query.sortBy ? String(request.query.sortBy) : 'createdAt',
+        sortDirection: request.query.sortDirection ? String(request.query.sortDirection) : 'desc',
+        pageNumber: request.query.pageNumber ? Number(request.query.pageNumber) : 1,
+        pageSize: request.query.pageSize ? Number(request.query.pageSize) : 10,
+    })
     response.status(200).send(post);
 });
 

@@ -16,8 +16,6 @@ export const getAllBlogs = async (data: GetBlogsModel): Promise<Paginator<BlogSt
 
     const aggregatePipeline: Document[] = [
         { $sort: {[sortBy]: data.sortDirection === 'asc' ? 1 : -1} },
-        { $skip: offset },
-        { $limit: data.pageSize },
     ];
 
     if (data.searchNameTerm) {
@@ -28,7 +26,11 @@ export const getAllBlogs = async (data: GetBlogsModel): Promise<Paginator<BlogSt
     }
 
     const blogs = await blogsCollection
-        .aggregate(aggregatePipeline)
+        .aggregate([
+            ...aggregatePipeline,
+            { $skip: offset },
+            { $limit: data.pageSize },
+        ])
         .toArray()
 
     const blogsTotalCount = await blogsCollection

@@ -100,10 +100,10 @@ blogsRouter.get('/:blogId/posts', async (request: Request<{blogId: string;}, {},
 
     const post = await postsService.getPosts({
         filter: {blogId: String(request.params.blogId)},
-        pageNumber: Number(request.query.pageNumber),
-        pageSize: Number(request.query.pageSize),
-        sortBy: String(request.query.sortBy),
-        sortDirection: String(request.query.sortDirection),
+        sortBy: request.query.sortBy ? String(request.query.sortBy) : 'createdAt',
+        sortDirection: request.query.sortDirection ? String(request.query.sortDirection) : 'desc',
+        pageNumber: request.query.pageNumber ? Number(request.query.pageNumber) : 1,
+        pageSize: request.query.pageSize ? Number(request.query.pageSize) : 10,
     })
     response.status(200).send(post);
 });

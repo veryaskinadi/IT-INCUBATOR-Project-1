@@ -12,7 +12,7 @@ export const postsCollection = client.db().collection('posts');
 export const getPosts = async (data: GetPostsModel): Promise<Paginator<PostStoreModelWithBlog>> => {
 
     const offset = (data.pageNumber - 1) * data.pageSize;
-    const sortBy = data.sortBy;
+    const sortBy = data.sortBy === 'blogName' ? 'blog.name' : data.sortBy;
 
     const aggregatePipeline: Document[] = [
         {
@@ -20,9 +20,10 @@ export const getPosts = async (data: GetPostsModel): Promise<Paginator<PostStore
                 from: "blogs",
                 localField: "blogId",
                 foreignField: "_id",
-                as: "blogs"
+                as: "blog"
             }
         },
+        { $unwind: "$blog"},
         { $sort: {[sortBy]: data.sortDirection === 'asc' ? 1 : -1} },
     ];
 
@@ -59,13 +60,13 @@ export const getPosts = async (data: GetPostsModel): Promise<Paginator<PostStore
             blogId: post.blogId
         }
 
-        if (post.blogs.length > 0) {
+        if (post.blog) {
             preparedPost.blog = {
-                id: post.blogs[0]._id.toString,
-                name: post.blogs[0].name,
-                description: post.blogs[0].description,
-                websiteUrl: post.blogs[0].websiteUrl,
-                createdAt: post.blogs[0].createdAt,
+                id: post.blog._id.toString,
+                name: post.blog.name,
+                description: post.blog.description,
+                websiteUrl: post.blog.websiteUrl,
+                createdAt: post.blog.createdAt,
             }
         }
        return preparedPost;

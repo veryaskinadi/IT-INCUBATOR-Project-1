@@ -73,6 +73,13 @@ blogsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>
 
 blogsRouter.post('/:blogId/posts', authMiddleWare, createPostByIdValidator, async (request: CreatePostByBlogIdRequestModel, response: Response) => {
 
+    const blog = await blogsService.getBlog(request.params.blogId)
+
+    if (!blog) {
+        response.sendStatus(404);
+        return;
+    }
+
     const createPostData = {
         blogId: request.params.blogId,
         ...request.body,
@@ -83,6 +90,14 @@ blogsRouter.post('/:blogId/posts', authMiddleWare, createPostByIdValidator, asyn
 });
 
 blogsRouter.get('/:blogId/posts', async (request: Request<{blogId: string;}, {}, {}>, response: Response) => {
+
+    const blog = await blogsService.getBlog(request.params.blogId)
+
+    if (!blog) {
+        response.sendStatus(404);
+        return;
+    }
+
     const post = await postsService.getPosts({
         filter: {blogId: String(request.params.blogId)},
         pageNumber: Number(request.query.pageNumber),

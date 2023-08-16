@@ -33,6 +33,15 @@ export const getPosts = async (data: GetPostsModel): Promise<Paginator<PostStore
         })
     }
 
+    // if (data.filter) {
+    //     aggregatePipeline.unshift( {
+    //         $match: {
+    //             ...data.filter,
+    //             blogId: new ObjId(data.filter.blogId),
+    //         }
+    //     })
+    // }
+
     const posts = await postsCollection
         .aggregate([
             ...aggregatePipeline,

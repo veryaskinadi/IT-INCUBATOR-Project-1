@@ -1,6 +1,7 @@
 export type CreateUserStoreModel = {
     login: string;
-    password: string;
+    passwordSalt: string;
+    passwordHash: string;
     email: string;
     createdAt: string;
 }

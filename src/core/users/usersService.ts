@@ -2,6 +2,8 @@ import {CreateUserModel} from "../models/CreateUserModel";
 import {User} from "../models/userModel";
 import * as usersRepository from "../../store/repositories/users-repository";
 import bcryptjs from "bcryptjs";
+import {GetQueryUserModel} from "../models/GetQueryUserModel";
+import {Paginator} from "../models/Paginator";
 
 export const createUser = async (data: CreateUserModel): Promise<User> => {
 
@@ -36,4 +38,37 @@ export const checkCredentials = async (loginOrEmail: string, password: string) =
         return false;
     }
     return true;
-}
+};
+
+export const getAllUsers = async (data: GetQueryUserModel): Promise<Paginator<User>> => {
+    const usersPaginator = await usersRepository.getAllUsers(data)
+    const allUsers = usersPaginator.items.map(user => ({
+            ...user,
+        })
+    )
+
+    return {
+        pagesCount: usersPaginator.pagesCount,
+        page: usersPaginator.page,
+        pageSize: usersPaginator.pageSize,
+        totalCount: usersPaginator.totalCount,
+        items: allUsers,
+    }
+};
+
+export const getUser = async (id: string): Promise<User | null> => {
+    const userResult = await usersRepository.getUserById(id)
+    if (!userResult) {
+        return null;
+    }
+    const user = {
+        ...userResult,
+    };
+    return user;
+};
+
+export const deleteUser = async (id: string): Promise<void> => {
+    await usersRepository.deleteUserById(id);
+};
+
+

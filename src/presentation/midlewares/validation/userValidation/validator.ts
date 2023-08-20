@@ -21,7 +21,7 @@ export async function createUserValidator (request: Request, response: Response,
     }
 
     if ( errorsMessages.length > 0 ) {
-        return response.status(401).send({errorsMessages})
+        return response.status(400).send({errorsMessages})
     } else {
         next()
     }

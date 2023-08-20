@@ -33,7 +33,7 @@ export const findByLoginOrEmail = async (loginOrEmail: string): Promise<UserStor
         passwordHash: user.passwordHash,
         passwordSalt: user.passwordSalt,
         createdAt: user.createdAt,
-        id: user.insertedId.toString(),
+        id: user._id.toString(),
     };
 };
 

@@ -30,10 +30,9 @@ export const createUser = async (data: CreateUserModel): Promise<User> => {
 };
 
 export const checkCredentials = async (loginOrEmail: string, password: string) => {
-    const passwordSalt = await bcryptjs.genSaltSync(10);
     const user = await usersRepository.findByLoginOrEmail(loginOrEmail);
     if(!user) return false;
-    const passwordHash =  await bcryptjs.hashSync(password, passwordSalt);
+    const passwordHash =  await bcryptjs.hashSync(password, user.passwordSalt);
     if(user.passwordHash !== passwordHash) {
         return false;
     }

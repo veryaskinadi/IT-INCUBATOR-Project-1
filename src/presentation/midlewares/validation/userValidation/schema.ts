@@ -20,7 +20,7 @@ export const createUserSchema = {
         isLength: {
             options: { max: 20, min: 6 },
         },
-        errorMessage: 'Неверное описание',
+        errorMessage: 'Неверный пароль',
     },
     email: {
         exists: true,

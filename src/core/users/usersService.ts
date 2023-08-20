@@ -1,11 +1,12 @@
 import {CreateUserModel} from "../models/CreateUserModel";
 import {User} from "../models/userModel";
-import * as usersRepository from "../../store/repositories/users-repository"
+import * as usersRepository from "../../store/repositories/users-repository";
+import bcryptjs from "bcryptjs";
 
 export const createUser = async (data: CreateUserModel): Promise<User> => {
 
-    const passwordSalt = await bcrypt.genSalt(10);
-    const passwordHash = await generateHash(password, passwordSalt);
+    const passwordSalt = await bcryptjs.genSaltSync(10);
+    const passwordHash = await bcryptjs.hashSync(data.password, passwordSalt);
 
     const newData = {
         login: data.login,
@@ -27,16 +28,12 @@ export const createUser = async (data: CreateUserModel): Promise<User> => {
 };
 
 export const checkCredentials = async (loginOrEmail: string, password: string) => {
-    const user = usersRepository.findByLoginOrEmail(loginOrEmail);
+    const passwordSalt = await bcryptjs.genSaltSync(10);
+    const user = await usersRepository.findByLoginOrEmail(loginOrEmail);
     if(!user) return false;
-    const passwordHash =  await generateHash(password, passwordSalt);
+    const passwordHash =  await bcryptjs.hashSync(password, passwordSalt);
     if(user.passwordHash !== passwordHash) {
         return false;
     }
     return true;
-}
-
-const generateHash = async (password: string, salt: string) => {
-    const hash = await bcrypt.hash(password, salt);
-    return hash;
 }

@@ -113,3 +113,8 @@ export const getUserById = async (id: string): Promise<GetUserStoreModel | null>
 export const deleteUserById = async (id: string): Promise<void> => {
     await usersCollection.deleteOne({_id: new ObjId(id)});
 }
+
+export const deleteUsers = async () => {
+    await usersCollection.deleteMany({});
+    return true;
+}

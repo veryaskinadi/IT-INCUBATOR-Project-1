@@ -70,4 +70,13 @@ export const deleteUser = async (id: string): Promise<void> => {
     await usersRepository.deleteUserById(id);
 };
 
+export const deleteUsers = async () => {
+    try {
+        await usersRepository.deleteUsers();
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
 

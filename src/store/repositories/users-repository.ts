@@ -80,9 +80,11 @@ export const getAllUsers = async (data: GetUsersModel): Promise<Paginator<GetUse
         .toArray()
 
     let pagesCount = 0;
+    let totalCount = 0;
 
     if (usersTotalCount.length > 0) {
-        pagesCount = Math.ceil(usersTotalCount[0]?.totalCount / data.pageSize );
+        totalCount = usersTotalCount[0]?.totalCount;
+        pagesCount = Math.ceil(totalCount / data.pageSize );
     }
 
     const allUsers = users.map((user:any) => ({
@@ -96,7 +98,7 @@ export const getAllUsers = async (data: GetUsersModel): Promise<Paginator<GetUse
         pagesCount: pagesCount,
         page: data.pageNumber,
         pageSize: data.pageSize,
-        totalCount: usersTotalCount[0].totalCount,
+        totalCount: totalCount,
         items: allUsers,
     }
 }

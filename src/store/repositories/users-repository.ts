@@ -46,18 +46,22 @@ export const getAllUsers = async (data: GetUsersModel): Promise<Paginator<GetUse
         { $sort: {[sortBy]: data.sortDirection === 'asc' ? 1 : -1} },
     ];
 
+    const matchConditions = [];
+
     if (data.searchLoginTerm) {
         const searchLoginTerm = new RegExp(`${data.searchLoginTerm}`, 'i');
-        aggregatePipelines.unshift({
-            $match: {login: {$regex: searchLoginTerm}}
-        })
+        matchConditions.push({ login: {$regex: searchLoginTerm} });
     }
 
     if (data.searchEmailTerm) {
         const searchEmailTerm = new RegExp(`${data.searchEmailTerm}`, 'i');
+        matchConditions.push({ email: {$regex: searchEmailTerm} });
+    }
+
+    if (matchConditions.length > 0) {
         aggregatePipelines.unshift({
-            $match: {email: {$regex: searchEmailTerm}}
-        })
+            $match: { $or: matchConditions }
+        });
     }
 
     const users = await usersCollection
@@ -75,7 +79,11 @@ export const getAllUsers = async (data: GetUsersModel): Promise<Paginator<GetUse
         ])
         .toArray()
 
-    const pagesCount = Math.ceil(usersTotalCount[0]?.totalCount / data.pageSize );
+    let pagesCount = 0;
+
+    if (usersTotalCount.length > 0) {
+        pagesCount = Math.ceil(usersTotalCount[0]?.totalCount / data.pageSize );
+    }
 
     const allUsers = users.map((user:any) => ({
         id: user._id.toString(),

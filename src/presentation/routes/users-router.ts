@@ -5,16 +5,16 @@ import { createUserValidator } from "../midlewares/validation/userValidation/val
 import {authMiddleWare} from "../midlewares/auth-middleware";
 
 
-export const users = Router({})
+export const usersRouter = Router({})
 
-users.post(
+usersRouter.post(
     '/', authMiddleWare, createUserValidator, async (request: CreateUserRequestModel, response: Response) => {
         const newUser = await usersService.createUser(request.body)
         response.status(201).send(newUser);
     }
 );
 
-users.get('/', authMiddleWare, async (request: Request, response: Response) => {
+usersRouter.get('/', authMiddleWare, async (request: Request, response: Response) => {
     const user = await usersService.getAllUsers({
         sortBy: request.query.sortBy ? String(request.query.sortBy) : 'createdAt',
         sortDirection: request.query.sortDirection ? String(request.query.sortDirection) : 'desc',
@@ -26,7 +26,7 @@ users.get('/', authMiddleWare, async (request: Request, response: Response) => {
     response.status(200).send(user);
 });
 
-users.delete('/:id', authMiddleWare, async (request: Request<{id: string}>, response: Response) => {
+usersRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>, response: Response) => {
     const user = await usersService.getUser(request.params.id)
 
     if (!user) {

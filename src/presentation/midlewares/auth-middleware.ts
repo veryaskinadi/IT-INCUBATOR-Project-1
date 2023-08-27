@@ -4,7 +4,7 @@
 //     users: { 'admin': 'qwerty' }
 // })
 import { NextFunction, Request, Response } from "express";
-import { jwtService } from "../application/jwt-service";2
+import { jwtService } from "../application/jwt-service";
 import * as usersService from "../../core/users/usersService"
 
 export const authMiddleWare = async (request: Request, response: Response, next: NextFunction) => {
@@ -13,12 +13,13 @@ export const authMiddleWare = async (request: Request, response: Response, next:
         return
     }
 
-    const token = request.headers.authorization.split('')[1]
+    const token = request.headers.authorization.split(' ')[1]
 
     const userId = await jwtService.getUserIdByToken(token)
     if (userId) {
         request.user = await usersService.getUser(userId)
-        next()
+    } else {
+        response.sendStatus(401)
     }
-    response.sendStatus(401)
+    next()
 }

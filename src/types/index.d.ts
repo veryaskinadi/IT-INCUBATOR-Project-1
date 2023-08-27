@@ -1,7 +1,9 @@
 import { UserDBType } from '../presentation/models/UserDBType'
 
+export {}
+
 declare global {
-    declare namespace Express {
+    namespace Express {
         export interface Request {
             user: UserDBType | null
         }

@@ -4,7 +4,7 @@ dotenv.config();
 
 export const ObjId = ObjectId;
 
-const url = process.env.MONGO_URL;
+const url = process.env.MONGO_URI;
 
 if(!url) {
     throw new Error("Wrong URL")

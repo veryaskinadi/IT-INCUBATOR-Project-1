@@ -1,7 +1,7 @@
 import {posts} from "../store";
 import {CreatePostStoreModel} from "../models/CreatePostStoreModel";
 import {PostStoreModel, PostStoreModelWithBlog} from "../models/PostStoreModel";
-import {client, ObjId} from "../bd";
+import {client, ObjId} from "../db";
 import {Document} from "mongodb";
 import {UpdateBlogModel} from "../models/UpdatePostModel";
 import {GetPostsModel} from "../models/GetPostsModel";

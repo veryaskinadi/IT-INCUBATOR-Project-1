@@ -31,12 +31,12 @@ export const createUser = async (data: CreateUserModel): Promise<User> => {
 
 export const checkCredentials = async (loginOrEmail: string, password: string) => {
     const user = await usersRepository.findByLoginOrEmail(loginOrEmail);
-    if(!user) return false;
+    if(!user) return null;
     const passwordHash =  await bcryptjs.hashSync(password, user.passwordSalt);
     if(user.passwordHash !== passwordHash) {
-        return false;
+        return null;
     }
-    return true;
+    return user;
 };
 
 export const getAllUsers = async (data: GetQueryUserModel): Promise<Paginator<User>> => {

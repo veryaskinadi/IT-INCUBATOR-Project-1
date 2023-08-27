@@ -1,4 +1,4 @@
-import {client, ObjId} from "../bd";
+import {client, ObjId} from "../db";
 import {CreateUserStoreModel} from "../models/CreateUserStoreModel";
 import {UserStoreModel} from "../models/UserStoreModel";
 import {GetUserStoreModel} from "../models/GetUserStoreModel";

@@ -6,7 +6,8 @@ import {testingRouter} from "./presentation/routes/testing-router";
 import {auth} from "./presentation/routes/auth-router";
 import {usersRouter} from "./presentation/routes/users-router";
 
-import {runDb} from "./store/bd";
+import {runDb} from "./store/db";
+import {feedbacksRouter} from "./presentation/routes/feedbacks-router";
 
 
 const app = express();
@@ -18,6 +19,7 @@ app.use('/posts', postsRouter);
 app.use('/testing', testingRouter);
 app.use('/users', usersRouter);
 app.use('/auth', auth);
+app.use('/feedbacks', feedbacksRouter);
 
 
 const startApp = async () => {

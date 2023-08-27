@@ -1,7 +1,7 @@
 import {blogs} from "../store";
 import {CreateBlogStoreModel} from "../models/CreateBlogStoreModel";
 import {BlogStoreModel} from "../models/BlogStoreModel";
-import {client, ObjId} from "../bd";
+import {client, ObjId} from "../db";
 import {Document} from "mongodb";
 import {UpdateBlogModel} from "../models/UpdateBlogModel";
 import {GetBlogsModel} from "../models/GetBlogsModel";

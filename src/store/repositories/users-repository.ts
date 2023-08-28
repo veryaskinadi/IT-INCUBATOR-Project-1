@@ -101,7 +101,7 @@ export const getAllUsers = async (data: GetUsersModel): Promise<Paginator<GetUse
         totalCount: totalCount,
         items: allUsers,
     }
-}
+};
 
 export const getUserById = async (id: string): Promise<GetUserStoreModel | null>  => {
     try {

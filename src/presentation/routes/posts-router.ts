@@ -6,7 +6,6 @@ import { UpdatePostRequestModel } from "../models/UpdatePostRequestModel";
 import { authMiddleWare } from "../midlewares/auth-middleware";
 import * as feedbacksService from '../../core/feedbacks/feedbacksService'
 
-
 export const postsRouter = Router({});
 
 postsRouter.get('/', async (request: Request, response: Response) => {
@@ -62,8 +61,36 @@ postsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>
 });
 
 postsRouter.post('/:postId/comments', authMiddleWare,
-    async (request: Request, response: Response) =>{
-        const newProduct = await feedbacksService.sendFeedback(request.body.comment, request.user!.id)
+    async (request: Request, response: Response) => {
+
+        const newProduct = await feedbacksService.sendFeedback({
+            postId: request.params.postId,
+            content: request.body.comment,
+            userId: request.user!.id,
+        })
         response.status(201).send(newProduct)
-    });
+    }
+);
+
+postsRouter.get('/:postId/comments', authMiddleWare,
+    async(request: Request, response: Response) => {
+
+    const post = await postsService.getPostById(request.params.postId)
+
+    if (!post) {
+        response.sendStatus(404);
+        return;
+    }
+
+    const feedback = await feedbacksService.getAllFeedbacks({
+        filter: {postId: String(request.params.postId)},
+        postId: request.params.postId,
+        userId: request.user!.id,
+        pageNumber: request.query.pageNumber ? Number(request.query.pageNumber) : 1,
+        pageSize: request.query.pageSize ? Number(request.query.pageSize) : 10,
+        sortBy: request.query.sortBy ? String(request.query.sortBy) : 'createdAt',
+        sortDirection: request.query.sortDirection ? String(request.query.sortDirection) : 'desc',
+    })
+    response.status(200).send(feedback);
+});
 

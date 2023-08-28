@@ -1,9 +1,10 @@
-import {CreateUserModel} from "../models/CreateUserModel";
-import {User} from "../models/userModel";
+import { CreateUserModel } from "../models/CreateUserModel";
+import { User } from "../models/userModel";
 import * as usersRepository from "../../store/repositories/users-repository";
 import bcryptjs from "bcryptjs";
-import {GetQueryUserModel} from "../models/GetQueryUserModel";
-import {Paginator} from "../models/Paginator";
+import { GetQueryUserModel } from "../models/GetQueryUserModel";
+import { Paginator } from "../models/Paginator";
+import { UserAuth } from "../../presentation/models/UserAuth";
 
 export const createUser = async (data: CreateUserModel): Promise<User> => {
 
@@ -78,5 +79,19 @@ export const deleteUsers = async () => {
         return false;
     }
 }
+
+export const getUserByUserId = async (id: string): Promise<UserAuth | null> => {
+    const userResult = await usersRepository.getUserById(id)
+    if (!userResult) {
+        return null;
+    }
+    const user = {
+        email: userResult.email,
+        login: userResult.login,
+        userId: id,
+    };
+    return user;
+}
+
 
 

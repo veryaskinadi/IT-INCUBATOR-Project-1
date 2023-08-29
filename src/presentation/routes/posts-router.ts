@@ -1,10 +1,14 @@
 import { Request, Response, Router } from "express";
-import { createPostValidator, updatePostValidator } from "../midlewares/validation/postValidation/validator"
+import {
+    createPostValidator,
+    updatePostValidator
+} from "../midlewares/validation/postValidation/validator"
 import * as postsService from "../../core/posts/postsService";
 import { CreatePostRequestModel } from "../models/CreatePostRequestModel";
 import { UpdatePostRequestModel } from "../models/UpdatePostRequestModel";
 import { authMiddleWare } from "../midlewares/auth-middleware";
 import * as feedbacksService from '../../core/feedbacks/feedbacksService'
+import { createFeedbackValidator } from '../midlewares/validation/feedbackValidion/validator'
 
 export const postsRouter = Router({});
 
@@ -60,12 +64,12 @@ postsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>
     response.sendStatus(204);
 });
 
-postsRouter.post('/:postId/comments', authMiddleWare,
+postsRouter.post('/:postId/comments', authMiddleWare, createFeedbackValidator,
     async (request: Request, response: Response) => {
 
         const newProduct = await feedbacksService.sendFeedback({
             postId: request.params.postId,
-            content: request.body.comment,
+            content: request.body.comments,
             userId: request.user!.id,
         })
         response.status(201).send(newProduct)

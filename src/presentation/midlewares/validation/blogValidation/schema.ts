@@ -41,7 +41,7 @@ export const updateBlogSchema = {
         trim: true,
         notEmpty: true,
         isLength: {
-            options: {max: 15 },
+            options: { max: 15 },
         },
         errorMessage: 'Неверное имя',
     },

@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from "express";
 import {checkSchema, FieldValidationError, validationResult} from "express-validator";
 import * as blogsService from "../../../../core/blogs/blogsService"
 
-
 type ValidationError = {
     message: string;
     field: string;

@@ -95,5 +95,9 @@ export const getFeedbackById = async (id: string): Promise<FeedbackStoreModel | 
     } catch(error) {
         return null;
     }
+};
 
+export const deleteFeedbackById = async (id: string): Promise<void> => {
+    await feedbacksCollection.deleteOne({_id: new ObjId(id)});
 }
+

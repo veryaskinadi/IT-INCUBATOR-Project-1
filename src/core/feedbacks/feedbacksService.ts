@@ -4,7 +4,7 @@ import { User } from "../models/userModel";
 import * as usersService from '../users/usersService'
 import { Paginator } from "../models/Paginator";
 import { GetQueryFeedbackModel } from '../models/GetQueryFeedbackModel';
-import {SendFeedbackModel} from "../models/SendFeedbackModel";
+import { SendFeedbackModel } from "../models/SendFeedbackModel";
 
 export const sendFeedback = async (data: SendFeedbackModel): Promise<Feedback> => {
     const user = await usersService.getUser(data.userId) as User;
@@ -60,4 +60,8 @@ export const getFeedbackById = async (id: string): Promise<Feedback | null> => {
         return null;
     }
     return feedback;
+}
+
+export const deleteFeedback = async (id: string): Promise<void> => {
+    await feedbacksRepository.deleteFeedbackById(id);
 }

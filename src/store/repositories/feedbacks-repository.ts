@@ -101,3 +101,7 @@ export const deleteFeedbackById = async (id: string): Promise<void> => {
     await feedbacksCollection.deleteOne({_id: new ObjId(id)});
 }
 
+export const updateFeedback = async (id: string, content: string): Promise<void> => {
+    await  feedbacksCollection.updateOne({_id: new ObjId(id)}, {$set: { content }});
+}
+

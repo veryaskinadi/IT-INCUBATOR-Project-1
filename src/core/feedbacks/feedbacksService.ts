@@ -65,3 +65,7 @@ export const getFeedbackById = async (id: string): Promise<Feedback | null> => {
 export const deleteFeedback = async (id: string): Promise<void> => {
     await feedbacksRepository.deleteFeedbackById(id);
 }
+
+export const updateFeedback = async (id: string, content: string): Promise<void> => {
+    await feedbacksRepository.updateFeedback(id, content)
+}

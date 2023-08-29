@@ -53,3 +53,11 @@ export const getAllFeedbacks = async (data: GetQueryFeedbackModel): Promise<Pagi
         items: allFeedbacks,
     }
 };
+
+export const getFeedbackById = async (id: string): Promise<Feedback | null> => {
+    const feedback = await feedbacksRepository.getFeedbackById(id)
+    if (!feedback) {
+        return null;
+    }
+    return feedback;
+}

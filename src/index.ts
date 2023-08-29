@@ -19,7 +19,7 @@ app.use('/posts', postsRouter);
 app.use('/testing', testingRouter);
 app.use('/users', usersRouter);
 app.use('/auth', auth);
-app.use('/feedbacks', feedbacksRouter);
+app.use('/comments', feedbacksRouter);
 
 
 const startApp = async () => {

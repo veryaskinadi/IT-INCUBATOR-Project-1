@@ -6,7 +6,7 @@ import { Document } from "mongodb";
 import { GetFeedbacksModel } from "../models/GetFeedbacksModel";
 import { GetFeedbackStoreModel } from "../models/GetFeedbackStoreModel";
 
-export const feedbacksCollection = client.db().collection('feedbacks');
+const feedbacksCollection = client.db().collection('feedbacks');
 
 export const createFeedBack = async (data: CreateFeedbackStoreModel): Promise<FeedbackStoreModel> => {
     const result = await feedbacksCollection.insertOne({...data});
@@ -76,3 +76,24 @@ export const getAllFeedbacks = async (data: GetFeedbacksModel): Promise<Paginato
         items: allFeedbacks,
     }
 };
+
+export const getFeedbackById = async (id: string): Promise<FeedbackStoreModel | null> => {
+    try {
+        const feedback = await feedbacksCollection.findOne({_id: new ObjId(id)});
+        if (!feedback) {
+            throw new Error('Not found');
+        }
+        return {
+            content: feedback.content,
+            createdAt: feedback.createdAt,
+            id: feedback._id.toString(),
+            commentatorInfo: {
+                userId: feedback.commentatorInfo.userId,
+                userLogin: feedback.commentatorInfo.userLogin,
+            }
+        }
+    } catch(error) {
+        return null;
+    }
+
+}

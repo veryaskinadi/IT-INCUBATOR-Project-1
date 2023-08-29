@@ -18,17 +18,11 @@ export const getAllBlogs = async (data: GetBlogsModel): Promise<Paginator<BlogSt
         { $sort: {[sortBy]: data.sortDirection === 'asc' ? 1 : -1} },
     ];
 
-    const matchConditions = [];
-
     if (data.searchNameTerm) {
         const searchNameTerm = new RegExp(`${data.searchNameTerm}`, 'i');
-        matchConditions.push({name: {$regex: searchNameTerm}})
-    }
-
-    if (matchConditions.length > 0) {
         aggregatePipeline.unshift({
-            $match: { $or: matchConditions }
-        });
+            $match: {name: {$regex: searchNameTerm}}
+        })
     }
 
     const blogs = await blogsCollection
@@ -51,9 +45,8 @@ export const getAllBlogs = async (data: GetBlogsModel): Promise<Paginator<BlogSt
 
     if (blogsTotalCount.length > 0) {
         totalCount = blogsTotalCount[0]?.totalCount;
-        pagesCount = Math.ceil(totalCount / data.pageSize)
+        pagesCount = Math.ceil(totalCount / data.pageSize )
     }
-
 
     const allBlogs = blogs.map((blog:any) => ({
         id: blog._id.toString(),
@@ -67,7 +60,7 @@ export const getAllBlogs = async (data: GetBlogsModel): Promise<Paginator<BlogSt
         pagesCount: pagesCount,
         page: data.pageNumber,
         pageSize: data.pageSize,
-        totalCount: blogsTotalCount[0].totalCount,
+        totalCount: totalCount,
         items: allBlogs,
     }
 }

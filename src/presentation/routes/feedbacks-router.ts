@@ -1,13 +1,12 @@
 import { Response, Request, Router } from "express";
 import { authMiddlewareBearer } from "../midlewares/auth-middlewareBearer";
-import { authMiddleware } from "../midlewares/auth-middleware";
 import * as feedbacksService from '../../core/feedbacks/feedbacksService';
 import { updateFeedbackValidator } from '../midlewares/validation/feedbackValidion/validator';
 import { UpdateFeedbackRequestModel } from '../models/UpdateFeedbackRequestModel';
 
 export const feedbacksRouter = Router({});
 
-feedbacksRouter.get('/:id', authMiddleware, async (request: Request, response: Response) => {
+feedbacksRouter.get('/:id', async (request: Request, response: Response) => {
     const feedback = await feedbacksService.getFeedbackById(request.params.id);
     if (!feedback) {
         response.sendStatus(404);

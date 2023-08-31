@@ -77,7 +77,7 @@ postsRouter.post('/:postId/comments', authMiddlewareBearer, createFeedbackValida
     }
 );
 
-postsRouter.get('/:postId/comments', authMiddleware,
+postsRouter.get('/:postId/comments',
     async(request: Request, response: Response) => {
 
     const post = await postsService.getPostById(request.params.postId)

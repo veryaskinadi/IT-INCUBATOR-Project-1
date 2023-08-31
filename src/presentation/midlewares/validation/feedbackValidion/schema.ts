@@ -1,5 +1,5 @@
 export const feedbackSchema = {
-    comments: {
+    content: {
         exists: true,
         isString: true,
         trim: true,

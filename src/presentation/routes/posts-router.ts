@@ -70,7 +70,7 @@ postsRouter.post('/:postId/comments', authMiddlewareBearer, createFeedbackValida
 
         const newProduct = await feedbacksService.sendFeedback({
             postId: request.params.postId,
-            content: request.body.comments,
+            content: request.body.content,
             userId: request.user!.id,
         })
         response.status(201).send(newProduct)

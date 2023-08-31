@@ -13,7 +13,7 @@ auth.post('/login', AuthValidator,
 
     if (user) {
         const token = await jwtService.createJWT(user)
-        response.status(200).send(token);
+        response.status(200).json(token);
     } else {
         response.sendStatus(401);
     }

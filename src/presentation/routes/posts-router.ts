@@ -68,6 +68,13 @@ postsRouter.delete('/:id', authMiddleware, async (request: Request<{id: string}>
 postsRouter.post('/:postId/comments', authMiddlewareBearer, createFeedbackValidator,
     async (request: Request, response: Response) => {
 
+        const post = await postsService.getPostById(request.params.postId)
+
+        if (!post) {
+            response.sendStatus(404);
+            return;
+        }
+
         const newProduct = await feedbacksService.sendFeedback({
             postId: request.params.postId,
             content: request.body.content,

@@ -90,7 +90,6 @@ postsRouter.get('/:postId/comments',
     const feedback = await feedbacksService.getAllFeedbacks({
         filter: {postId: String(request.params.postId)},
         postId: request.params.postId,
-        userId: request.user!.id,
         pageNumber: request.query.pageNumber ? Number(request.query.pageNumber) : 1,
         pageSize: request.query.pageSize ? Number(request.query.pageSize) : 10,
         sortBy: request.query.sortBy ? String(request.query.sortBy) : 'createdAt',

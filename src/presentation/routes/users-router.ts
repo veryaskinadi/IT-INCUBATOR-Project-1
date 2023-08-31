@@ -8,7 +8,7 @@ import {authMiddleware} from "../midlewares/auth-middleware";
 export const usersRouter = Router({})
 
 usersRouter.post(
-    '/', createUserValidator, async (request: CreateUserRequestModel, response: Response) => {
+    '/',authMiddleware, createUserValidator, async (request: CreateUserRequestModel, response: Response) => {
         const newUser = await usersService.createUser(request.body)
         response.status(201).send(newUser);
     }

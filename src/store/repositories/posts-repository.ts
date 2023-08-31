@@ -57,7 +57,13 @@ export const getPosts = async (data: GetPostsModel): Promise<Paginator<PostStore
         ])
         .toArray()
 
-    const pagesCount = Math.ceil(postsTotalCount[0].totalCount / data.pageSize);
+    let pagesCount = 0;
+    let totalCount = 0;
+
+    if (postsTotalCount.length > 0) {
+        totalCount = postsTotalCount[0]?.totalCount;
+        pagesCount = Math.ceil(totalCount / data.pageSize )
+    }
 
     const allPosts = posts.map(post => {
         const preparedPost: PostStoreModelWithBlog = {
@@ -85,7 +91,7 @@ export const getPosts = async (data: GetPostsModel): Promise<Paginator<PostStore
         pagesCount: pagesCount,
         page: data.pageNumber,
         pageSize: data.pageSize,
-        totalCount: postsTotalCount[0].totalCount,
+        totalCount: totalCount,
         items: allPosts,
     };
 }

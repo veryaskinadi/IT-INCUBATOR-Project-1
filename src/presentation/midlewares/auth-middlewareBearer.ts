@@ -13,8 +13,13 @@ export const authMiddlewareBearer = async (request: Request, response: Response,
     const userId = await jwtService.getUserIdByToken(token)
     if (userId) {
         request.user = await usersService.getUser(userId)
+        if (!request.user) {
+            response.sendStatus(401)
+            return
+        }
     } else {
         response.sendStatus(401)
+        return
     }
     next()
 }

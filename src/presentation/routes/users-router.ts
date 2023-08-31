@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import { CreateUserRequestModel } from "../models/CreateUserRequestModel";
 import * as usersService from "../../core/users/usersService";
 import { createUserValidator } from "../midlewares/validation/userValidation/validator"
-import {authMiddleWare} from "../midlewares/auth-middleware";
+import {authMiddleware} from "../midlewares/auth-middleware";
 
 
 export const usersRouter = Router({})
@@ -14,7 +14,7 @@ usersRouter.post(
     }
 );
 
-usersRouter.get('/', authMiddleWare, async (request: Request, response: Response) => {
+usersRouter.get('/', authMiddleware, async (request: Request, response: Response) => {
     const user = await usersService.getAllUsers({
         sortBy: request.query.sortBy ? String(request.query.sortBy) : 'createdAt',
         sortDirection: request.query.sortDirection ? String(request.query.sortDirection) : 'desc',
@@ -26,7 +26,7 @@ usersRouter.get('/', authMiddleWare, async (request: Request, response: Response
     response.status(200).send(user);
 });
 
-usersRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>, response: Response) => {
+usersRouter.delete('/:id', authMiddleware, async (request: Request<{id: string}>, response: Response) => {
     const user = await usersService.getUser(request.params.id)
 
     if (!user) {

@@ -1,12 +1,13 @@
 import { Response, Request, Router } from "express";
-import { authMiddleWare } from "../midlewares/auth-middleware";
+import { authMiddlewareBearer } from "../midlewares/auth-middlewareBearer";
+import { authMiddleware } from "../midlewares/auth-middleware";
 import * as feedbacksService from '../../core/feedbacks/feedbacksService';
 import { updateFeedbackValidator } from '../midlewares/validation/feedbackValidion/validator';
 import { UpdateFeedbackRequestModel } from '../models/UpdateFeedbackRequestModel';
 
 export const feedbacksRouter = Router({});
 
-feedbacksRouter.get('/:id', authMiddleWare, async (request: Request, response: Response) => {
+feedbacksRouter.get('/:id', authMiddleware, async (request: Request, response: Response) => {
     const feedback = await feedbacksService.getFeedbackById(request.params.id);
     if (!feedback) {
         response.sendStatus(404);
@@ -15,7 +16,7 @@ feedbacksRouter.get('/:id', authMiddleWare, async (request: Request, response: R
     response.status(200).send(feedback);
 })
 
-feedbacksRouter.delete('/:id', authMiddleWare, async (request: Request, response: Response) => {
+feedbacksRouter.delete('/:id', authMiddlewareBearer, async (request: Request, response: Response) => {
     const feedback = await feedbacksService.getFeedbackById(request.params.id)
 
     if (!feedback) {
@@ -32,7 +33,7 @@ feedbacksRouter.delete('/:id', authMiddleWare, async (request: Request, response
     response.sendStatus(204);
 })
 
-feedbacksRouter.put ('/:id', authMiddleWare, updateFeedbackValidator, async (request: UpdateFeedbackRequestModel, response: Response) => {
+feedbacksRouter.put ('/:id', authMiddlewareBearer, updateFeedbackValidator, async (request: UpdateFeedbackRequestModel, response: Response) => {
     const feedback = await feedbacksService.getFeedbackById(request.params.id)
 
     if (!feedback) {

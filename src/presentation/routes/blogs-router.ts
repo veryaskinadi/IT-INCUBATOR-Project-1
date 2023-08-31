@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {authMiddleWare} from "../midlewares/auth-middleware";
+import {authMiddleware} from "../midlewares/auth-middleware";
 import {CreateBlogRequestModel} from "../models/CreateBlogRequestModel";
 import * as blogsService from "../../core/blogs/blogsService";
 import {createBlogValidator, updateBlogValidator} from "../midlewares/validation/blogValidation/validator";
@@ -23,7 +23,7 @@ blogsRouter.get('/', async (request: Request, response: Response) => {
 
 blogsRouter.post(
     '/',
-    authMiddleWare,
+    authMiddleware,
     createBlogValidator,
     async (request: CreateBlogRequestModel, response: Response) => {
         const newBlog = await blogsService.createBlog(request.body)
@@ -32,7 +32,7 @@ blogsRouter.post(
 );
 
 blogsRouter.put('/:id',
-    authMiddleWare,
+    authMiddleware,
     updateBlogValidator,
     async (request: UpdateBlogRequestModel, response: Response) => {
         const blog = await blogsService.getBlog(request.params.id)
@@ -59,7 +59,7 @@ blogsRouter.get('/:id', async (request: Request<{id: string}>, response: Respons
 
 });
 
-blogsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>, response: Response) => {
+blogsRouter.delete('/:id', authMiddleware, async (request: Request<{id: string}>, response: Response) => {
     const blog = await blogsService.getBlog(request.params.id)
 
     if (!blog) {
@@ -71,7 +71,7 @@ blogsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>
     response.sendStatus(204);
 });
 
-blogsRouter.post('/:blogId/posts', authMiddleWare, createPostByIdValidator, async (request: CreatePostByBlogIdRequestModel, response: Response) => {
+blogsRouter.post('/:blogId/posts', authMiddleware, createPostByIdValidator, async (request: CreatePostByBlogIdRequestModel, response: Response) => {
 
     const blog = await blogsService.getBlog(request.params.blogId)
 

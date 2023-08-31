@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import * as usersService from "../../core/users/usersService";
 import {AuthValidator} from "../midlewares/validation/authValidation/validator";
 import {jwtService} from "../application/jwt-service";
-import {authMiddleWare} from "../midlewares/auth-middleware";
+import {authMiddleware} from "../midlewares/auth-middleware";
 
 export const auth = Router({})
 
@@ -19,7 +19,7 @@ auth.post('/login', AuthValidator,
     }
 })
 
-auth.get('/me', authMiddleWare, async (request: Request, response: Response) => {
+auth.get('/me', authMiddleware, async (request: Request, response: Response) => {
     const user = await usersService.getUserByUserId(request.user!.id);
     if(!user){
         response.sendStatus(401);

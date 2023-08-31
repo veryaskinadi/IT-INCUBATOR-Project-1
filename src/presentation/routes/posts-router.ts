@@ -6,7 +6,8 @@ import {
 import * as postsService from "../../core/posts/postsService";
 import { CreatePostRequestModel } from "../models/CreatePostRequestModel";
 import { UpdatePostRequestModel } from "../models/UpdatePostRequestModel";
-import { authMiddleWare } from "../midlewares/auth-middleware";
+import { authMiddlewareBearer } from "../midlewares/auth-middlewareBearer";
+import { authMiddleware } from "../midlewares/auth-middleware";
 import * as feedbacksService from '../../core/feedbacks/feedbacksService'
 import { createFeedbackValidator } from '../midlewares/validation/feedbackValidion/validator'
 
@@ -22,12 +23,12 @@ postsRouter.get('/', async (request: Request, response: Response) => {
     response.status(200).send(post);
 });
 
-postsRouter.post('/', authMiddleWare, createPostValidator, async (request: CreatePostRequestModel, response: Response) => {
+postsRouter.post('/', authMiddleware, createPostValidator, async (request: CreatePostRequestModel, response: Response) => {
     const newPost = await postsService.createPost(request.body)
     response.status(201).send(newPost);
 });
 
-postsRouter.put('/:id', authMiddleWare, updatePostValidator, async (request: UpdatePostRequestModel, response: Response) => {
+postsRouter.put('/:id', authMiddleware, updatePostValidator, async (request: UpdatePostRequestModel, response: Response) => {
     const post = await postsService.getPostById(request.params.id)
 
     if (!post) {
@@ -51,7 +52,7 @@ postsRouter.get('/:id', async (request: Request<{id: string}>, response: Respons
     response.status(200).send(post);
 });
 
-postsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>, response: Response) => {
+postsRouter.delete('/:id', authMiddleware, async (request: Request<{id: string}>, response: Response) => {
     const post = await postsService.getPostById(request.params.id)
 
     if (!post) {
@@ -64,7 +65,7 @@ postsRouter.delete('/:id', authMiddleWare, async (request: Request<{id: string}>
     response.sendStatus(204);
 });
 
-postsRouter.post('/:postId/comments', authMiddleWare, createFeedbackValidator,
+postsRouter.post('/:postId/comments', authMiddlewareBearer, createFeedbackValidator,
     async (request: Request, response: Response) => {
 
         const newProduct = await feedbacksService.sendFeedback({
@@ -76,7 +77,7 @@ postsRouter.post('/:postId/comments', authMiddleWare, createFeedbackValidator,
     }
 );
 
-postsRouter.get('/:postId/comments', authMiddleWare,
+postsRouter.get('/:postId/comments', authMiddleware,
     async(request: Request, response: Response) => {
 
     const post = await postsService.getPostById(request.params.postId)

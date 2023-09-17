@@ -19,6 +19,7 @@ export const createUser = async (data: CreateUserStoreModel): Promise<UserStoreM
         passwordSalt: data.passwordSalt,
         createdAt: data.createdAt,
         id: result.insertedId.toString(),
+        emailConfirmation: data.emailConfirmation,
     };
 }
 
@@ -106,6 +107,23 @@ export const getAllUsers = async (data: GetUsersModel): Promise<Paginator<GetUse
 export const getUserById = async (id: string): Promise<GetUserStoreModel | null>  => {
     try {
         const user = await usersCollection.findOne({_id: new ObjId(id)});
+        if (!user) {
+            throw new Error('Not found');
+        }
+        return {
+            id: user._id.toString(),
+            login: user.login,
+            email: user.email,
+            createdAt: user.createdAt,
+        }
+    } catch(error) {
+        return null;
+    }
+}
+
+export const getUserByEmail = async (email: string): Promise<GetUserStoreModel | null>  => {
+    try {
+        const user = await usersCollection.findOne({email});
         if (!user) {
             throw new Error('Not found');
         }

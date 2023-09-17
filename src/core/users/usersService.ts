@@ -17,6 +17,10 @@ export const createUser = async (data: CreateUserModel): Promise<User> => {
         passwordSalt,
         passwordHash,
         createdAt: new Date().toISOString(),
+        emailConfirmation: {
+            confirmationCode: data.emailConfirmation?.confirmationCode,
+            isConfirmed: data.emailConfirmation?.isConfirmed || false,
+        }
     }
 
     const newUserStore = await usersRepository.createUser(newData)
@@ -89,6 +93,19 @@ export const getUserByUserId = async (id: string): Promise<UserAuth | null> => {
         email: userResult.email,
         login: userResult.login,
         userId: id,
+    };
+    return user;
+}
+
+export const getUserByEmail = async (email: string): Promise<UserAuth | null> => {
+    const userResult = await usersRepository.getUserByEmail(email)
+    if (!userResult) {
+        return null;
+    }
+    const user = {
+        email: userResult.email,
+        login: userResult.login,
+        userId: userResult.id,
     };
     return user;
 }

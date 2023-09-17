@@ -5,4 +5,8 @@ export type UserStoreModel = {
     passwordSalt: string;
     passwordHash: string;
     createdAt: string;
+    emailConfirmation?: {
+        confirmationCode?: string;
+        isConfirmed?: boolean;
+    };
 }

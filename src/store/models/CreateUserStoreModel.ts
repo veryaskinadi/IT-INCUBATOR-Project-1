@@ -4,4 +4,8 @@ export type CreateUserStoreModel = {
     passwordHash: string;
     email: string;
     createdAt: string;
+    emailConfirmation?: {
+        confirmationCode?: string;
+        isConfirmed?: boolean;
+    };
 }

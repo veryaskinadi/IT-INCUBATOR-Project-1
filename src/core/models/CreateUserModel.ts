@@ -3,7 +3,7 @@ export type CreateUserModel = {
     password: string;
     email: string;
     emailConfirmation?: {
-        confirmationCode?: string,
-        isConfirmed?: boolean,
+        confirmationCode: string,
+        isConfirmed: boolean,
     }
 }

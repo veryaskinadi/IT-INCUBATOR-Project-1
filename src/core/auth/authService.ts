@@ -15,8 +15,7 @@ export const register = async (login: string, password: string): Promise<void> =
     }
     const newUser = await usersService.createUser(data)
 
-    if (newUser?.emailConfirmation) {
-        // отправить письмо
+    if (newUser && newUser.emailConfirmation && newUser.emailConfirmation.confirmationCode) {
         authEmailManager.sendRegisterEmail(newUser)
     }
 

@@ -32,7 +32,7 @@ auth.get('/me', authMiddleware, async (request: Request, response: Response) => 
 })
 
 // todo: добавить валидатор
-auth.post('/register', async (request: Request, response: Response) => {
+auth.post('/registration', async (request: Request, response: Response) => {
     const user = await usersService.getUserByEmail(request.body.email);
     if (!user) {
         response.sendStatus(409);

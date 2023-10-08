@@ -18,8 +18,8 @@ export const createUser = async (data: CreateUserModel): Promise<User> => {
         passwordHash,
         createdAt: new Date().toISOString(),
         emailConfirmation: {
-            confirmationCode: data.emailConfirmation?.confirmationCode,
-            isConfirmed: data.emailConfirmation?.isConfirmed || false,
+            confirmationCode: data.emailConfirmation?.confirmationCode || '0000',
+            isConfirmed: data.emailConfirmation?.isConfirmed || true,
         }
     }
 
@@ -29,6 +29,7 @@ export const createUser = async (data: CreateUserModel): Promise<User> => {
         login: newUserStore.login,
         email: newUserStore.email,
         createdAt: newUserStore.createdAt,
+        emailConfirmation: newUserStore.emailConfirmation,
     }
 
     return newUser;

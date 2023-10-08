@@ -3,8 +3,8 @@ export type User = {
     login: string;
     email: string;
     createdAt: string;
-    emailConfirmation?: {
-        confirmationCode?: string,
-        isConfirmed?: boolean,
+    emailConfirmation: {
+        confirmationCode: string,
+        isConfirmed: boolean,
     }
 }

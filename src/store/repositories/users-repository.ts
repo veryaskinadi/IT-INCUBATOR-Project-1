@@ -35,6 +35,7 @@ export const findByLoginOrEmail = async (loginOrEmail: string): Promise<UserStor
         passwordSalt: user.passwordSalt,
         createdAt: user.createdAt,
         id: user._id.toString(),
+        emailConfirmation: user.emailConfirmation,
     };
 };
 
@@ -93,6 +94,7 @@ export const getAllUsers = async (data: GetUsersModel): Promise<Paginator<GetUse
         login: user.login,
         email: user.email,
         createdAt: user.createdAt,
+        emailConfirmation: user.emailConfirmation,
     }));
 
     return {
@@ -115,6 +117,7 @@ export const getUserById = async (id: string): Promise<GetUserStoreModel | null>
             login: user.login,
             email: user.email,
             createdAt: user.createdAt,
+            emailConfirmation: user.emailConfirmation,
         }
     } catch(error) {
         return null;
@@ -132,6 +135,7 @@ export const getUserByEmail = async (email: string): Promise<GetUserStoreModel |
             login: user.login,
             email: user.email,
             createdAt: user.createdAt,
+            emailConfirmation: user.emailConfirmation,
         }
     } catch(error) {
         return null;

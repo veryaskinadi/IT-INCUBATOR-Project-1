@@ -153,7 +153,9 @@ export const deleteUsers = async () => {
 
 export const getUserByConfirmCode = async (code: string): Promise<GetUserStoreModel | null> => {
     try {
-        const user = await usersCollection.findOne({code});
+        const user = await usersCollection.findOne({
+            "emailConfirmation.confirmationCode": code
+        });
         if (!user) {
             throw new Error('Not found');
         }
@@ -167,4 +169,8 @@ export const getUserByConfirmCode = async (code: string): Promise<GetUserStoreMo
     } catch(error) {
         return null;
     }
+}
+
+export const confirm = async (userId: string) => {
+    await usersCollection.updateOne({_id: new ObjId(userId)}, {$set: {"emailConfirmation.isConfirmed": true}})
 }

@@ -23,9 +23,9 @@ export const register = async (email: string, login: string, password: string): 
 
 export const confirm = async (code: string): Promise<boolean> => {
  const user = await getUserByConfirmCode(code)
-    if (user) {
-        return true;
-    } else {
-        return false;
+    if (!user) {
+        return false
     }
+    usersService.confirm(user.id)
+    return true
 }

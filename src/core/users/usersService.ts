@@ -19,7 +19,7 @@ export const createUser = async (data: CreateUserModel): Promise<User> => {
         createdAt: new Date().toISOString(),
         emailConfirmation: {
             confirmationCode: data.emailConfirmation?.confirmationCode || '0000',
-            isConfirmed: data.emailConfirmation?.isConfirmed || true,
+            isConfirmed: typeof data.emailConfirmation?.isConfirmed === "boolean" ? data.emailConfirmation.isConfirmed : true,
         }
     }
 
@@ -98,7 +98,7 @@ export const getUserByUserId = async (id: string): Promise<UserAuth | null> => {
     return user;
 }
 
-export const  getUserByEmail = async (email: string): Promise<UserAuth | null> => {
+export const getUserByEmail = async (email: string): Promise<UserAuth | null> => {
     const userResult = await usersRepository.getUserByEmail(email)
     if (!userResult) {
         return null;
@@ -109,6 +109,10 @@ export const  getUserByEmail = async (email: string): Promise<UserAuth | null> =
         userId: userResult.id,
     };
     return user;
+}
+
+export const confirm = async (userId: string) => {
+    await usersRepository.confirm(userId);
 }
 
 

@@ -29,3 +29,13 @@ export const confirm = async (code: string): Promise<boolean> => {
     usersService.confirm(user.id)
     return true
 }
+
+export const resendCode = async (email: string): Promise<void> => {
+    const user = await usersService.getUserByEmail(email)
+    if (user?.emailConfirmation.isConfirmed === true) {
+        throw new Error("already confirmed")
+    }
+    if (user && user.emailConfirmation && user.emailConfirmation.confirmationCode) {
+       await authEmailManager.sendRegisterEmail(user)
+    }
+}

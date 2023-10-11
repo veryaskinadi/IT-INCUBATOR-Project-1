@@ -98,7 +98,7 @@ export const getUserByUserId = async (id: string): Promise<UserAuth | null> => {
     return user;
 }
 
-export const getUserByEmail = async (email: string): Promise<UserAuth | null> => {
+export const getUserByEmail = async (email: string): Promise<User | null> => {
     const userResult = await usersRepository.getUserByEmail(email)
     if (!userResult) {
         return null;
@@ -106,7 +106,9 @@ export const getUserByEmail = async (email: string): Promise<UserAuth | null> =>
     const user = {
         email: userResult.email,
         login: userResult.login,
-        userId: userResult.id,
+        id: userResult.id,
+        createdAt: userResult.createdAt,
+        emailConfirmation: userResult.emailConfirmation,
     };
     return user;
 }

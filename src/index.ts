@@ -8,11 +8,12 @@ import {usersRouter} from "./presentation/routes/users-router";
 
 import {runDb} from "./store/db";
 import {feedbacksRouter} from "./presentation/routes/feedbacks-router";
+import {settings} from "./presentation/application/settings";
 
 
 const app = express();
 app.use(bodyParser.json({strict: false}));
-const port = 8080;
+const port = settings.PORT;
 
 app.use('/blogs', blogsRouter);
 app.use('/posts', postsRouter);

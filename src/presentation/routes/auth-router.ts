@@ -6,6 +6,8 @@ import {authMiddleware} from "../midlewares/auth-middleware";
 import  * as authService from "../../core/auth/authService";
 import {registrationValidator} from "../midlewares/validation/authValidation/registrationValidator";
 import { registrationConfirmationValidator } from "../midlewares/validation/authValidation/registrationConfirmationValidator";
+import { registrationResendingValidator } from "../midlewares/validation/authValidation/registrationResendingValidator";
+import * as authEmailManager from "../../core/auth/authEmailManager";
 
 export const auth = Router({})
 
@@ -43,11 +45,24 @@ auth.post('/registration', registrationValidator, async (request: Request, respo
     response.status(204).send(newUser);
 })
 
-auth.get('/registration-confirmation', registrationConfirmationValidator, async (request: Request, response: Response) => {
+auth.post('/registration-confirmation', registrationConfirmationValidator, async (request: Request, response: Response) => {
     const confirmResult = await authService.confirm(request.body.code);
     if (!confirmResult) {
         response.sendStatus(400);
         return
     }
     response.sendStatus(204);
+})
+
+auth.post('/registration-email-resending', registrationResendingValidator, async (request: Request, response: Response) => {
+    const user = await usersService.getUserByEmail(request.body.email);
+    if (!user) {
+        response.sendStatus(400)
+    }
+    try {
+        await authService.resendCode(request.body.email)
+        response.status(204).send();
+    } catch (error) {
+        response.sendStatus(400)
+    }
 })

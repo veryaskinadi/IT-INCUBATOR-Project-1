@@ -150,3 +150,21 @@ export const deleteUsers = async () => {
     await usersCollection.deleteMany({});
     return true;
 }
+
+export const getUserByConfirmCode = async (code: string): Promise<GetUserStoreModel | null> => {
+    try {
+        const user = await usersCollection.findOne({code});
+        if (!user) {
+            throw new Error('Not found');
+        }
+        return {
+            id: user._id.toString(),
+            login: user.login,
+            email: user.email,
+            createdAt: user.createdAt,
+            emailConfirmation: user.emailConfirmation,
+        }
+    } catch(error) {
+        return null;
+    }
+}

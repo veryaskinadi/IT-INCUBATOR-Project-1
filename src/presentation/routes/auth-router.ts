@@ -4,6 +4,7 @@ import {AuthValidator} from "../midlewares/validation/authValidation/validator";
 import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../midlewares/auth-middleware";
 import  * as authService from "../../core/auth/authService";
+import {registrationValidator} from "../midlewares/validation/authValidation/registrationValidator";
 
 export const auth = Router({})
 
@@ -32,12 +33,21 @@ auth.get('/me', authMiddleware, async (request: Request, response: Response) => 
 })
 
 // todo: добавить валидатор
-auth.post('/registration', async (request: Request, response: Response) => {
+auth.post('/registration', registrationValidator, async (request: Request, response: Response) => {
     const user = await usersService.getUserByEmail(request.body.email);
-    if (!user) {
+    if (user) {
         response.sendStatus(409);
         return
     }
-    const newUser = await authService.register(request.body.email, request.body.password)
-    response.status(201).send(newUser);
+    const newUser = await authService.register(request.body.email, request.body.login, request.body.password)
+    response.status(204).send(newUser);
+})
+
+auth.get('/registration-confirmation', async (request: Request, response: Response) => {
+    const confirmResult = await authService.confirm(request.body.code);
+    if (!confirmResult) {
+        response.sendStatus(400);
+        return
+    }
+    response.sendStatus(204);
 })

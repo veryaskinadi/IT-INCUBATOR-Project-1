@@ -98,7 +98,7 @@ export const getUserByUserId = async (id: string): Promise<UserAuth | null> => {
     return user;
 }
 
-export const getUserByEmail = async (email: string): Promise<UserAuth | null> => {
+export const  getUserByEmail = async (email: string): Promise<UserAuth | null> => {
     const userResult = await usersRepository.getUserByEmail(email)
     if (!userResult) {
         return null;

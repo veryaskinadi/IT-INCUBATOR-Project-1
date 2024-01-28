@@ -7,7 +7,9 @@ import  * as authService from "../../core/auth/authService";
 import {registrationValidator} from "../midlewares/validation/authValidation/registrationValidator";
 import { registrationConfirmationValidator } from "../midlewares/validation/authValidation/registrationConfirmationValidator";
 import { registrationResendingValidator } from "../midlewares/validation/authValidation/registrationResendingValidator";
-import * as authEmailManager from "../../core/auth/authEmailManager";
+import axios from "axios";
+import {settings} from "../application/settings";
+
 
 export const auth = Router({})
 
@@ -52,6 +54,13 @@ auth.post('/registration-confirmation', registrationConfirmationValidator, async
         return
     }
     response.sendStatus(204);
+})
+
+auth.get('/registration-confirmation', async (request: Request, response: Response) => {
+    await axios.post(`http://${settings.HOST}:${settings.PORT}/auth/registration-confirmation`, {
+        code: request.query.code,
+    })
+    response.status(204).send();
 })
 
 auth.post('/registration-email-resending', registrationResendingValidator, async (request: Request, response: Response) => {

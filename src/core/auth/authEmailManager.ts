@@ -3,7 +3,7 @@ import * as emailAdapter from "../../adapters/emailAdapter";
 import {settings} from "../../presentation/application/settings";
 
 export const sendRegisterEmail = async (user: SendRegisterEmailUserModel): Promise<void> => {
-    const link = `${settings.HOST}/auth/registration-confirmation?code=${user.emailConfirmation.confirmationCode}`
+    const link = `http://${settings.HOST}:${settings.PORT}/auth/registration-confirmation?code=${user.emailConfirmation.confirmationCode}`
     const text = `<a href="${link}">${link}</a>`
 
     await emailAdapter.sendEmail({

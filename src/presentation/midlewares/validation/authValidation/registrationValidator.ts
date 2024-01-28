@@ -21,7 +21,7 @@ export async function registrationValidator (request: Request, response: Respons
     }
 
     if ( errorsMessages.length > 0 ) {
-        return response.status(401).send({errorsMessages})
+        return response.status(400).send({errorsMessages})
     } else {
         next()
     }

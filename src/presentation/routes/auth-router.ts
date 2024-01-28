@@ -40,7 +40,7 @@ auth.get('/me', authMiddleware, async (request: Request, response: Response) => 
 auth.post('/registration', registrationValidator, async (request: Request, response: Response) => {
     const user = await usersService.getUserByEmail(request.body.email);
     if (user) {
-        response.sendStatus(409);
+        response.status(400).send({errorsMessages: [{ message: "Wrong", field: "email" }]});
         return
     }
     const newUser = await authService.register(request.body.email, request.body.login, request.body.password)

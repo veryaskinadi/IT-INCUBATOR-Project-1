@@ -50,7 +50,7 @@ auth.post('/registration', registrationValidator, async (request: Request, respo
 auth.post('/registration-confirmation', registrationConfirmationValidator, async (request: Request, response: Response) => {
     const confirmResult = await authService.confirm(request.body.code);
     if (!confirmResult) {
-        response.sendStatus(400);
+        response.status(400).send({errorsMessages: [{ message: "Wrong code", field: "code" }]});
         return
     }
     response.sendStatus(204);
@@ -66,7 +66,9 @@ auth.get('/registration-confirmation', async (request: Request, response: Respon
 auth.post('/registration-email-resending', registrationResendingValidator, async (request: Request, response: Response) => {
     const user = await usersService.getUserByEmail(request.body.email);
     if (!user) {
-        response.sendStatus(400)
+
+        response.status(400).send({ errorsMessages: [{ message: "Wrong email", field: "email" }] });
+
     }
     try {
         await authService.resendCode(request.body.email)

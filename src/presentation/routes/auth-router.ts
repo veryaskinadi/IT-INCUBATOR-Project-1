@@ -38,9 +38,16 @@ auth.get('/me', authMiddleware, async (request: Request, response: Response) => 
 })
 
 auth.post('/registration', registrationValidator, async (request: Request, response: Response) => {
-    const user = await usersService.getUserByEmail(request.body.email);
+    const errorsMessages = [];
+    const user = await usersService.getUserByCredentials(request.body.email, request.body.login);
     if (user) {
-        response.status(400).send({errorsMessages: [{ message: "Wrong", field: "email" }]});
+        if (user.email === request.body.email) {
+            errorsMessages.push({ message: "Wrong", field: "email" })
+        }
+        if (user.login === request.body.login) {
+            errorsMessages.push({ message: "Wrong", field: "login" })
+        }
+        response.status(400).send({errorsMessages});
         return
     }
     const newUser = await authService.register(request.body.email, request.body.login, request.body.password)
@@ -66,9 +73,7 @@ auth.get('/registration-confirmation', async (request: Request, response: Respon
 auth.post('/registration-email-resending', registrationResendingValidator, async (request: Request, response: Response) => {
     const user = await usersService.getUserByEmail(request.body.email);
     if (!user) {
-
         response.status(400).send({ errorsMessages: [{ message: "Wrong email", field: "email" }] });
-
     }
     try {
         await authService.resendCode(request.body.email)

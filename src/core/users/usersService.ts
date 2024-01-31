@@ -117,5 +117,20 @@ export const confirm = async (userId: string) => {
     await usersRepository.confirm(userId);
 }
 
+export  const getUserByCredentials = async (email: string, login: string): Promise<User | null> => {
+    const userResult = await usersRepository.getUserByCredentials(email, login)
+    if (!userResult) {
+        return null;
+    }
+    const user = {
+        email: userResult.email,
+        login: userResult.login,
+        id: userResult.id,
+        createdAt: userResult.createdAt,
+        emailConfirmation: userResult.emailConfirmation,
+    };
+    return user;
+}
+
 
 

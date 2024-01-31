@@ -174,3 +174,21 @@ export const getUserByConfirmCode = async (code: string): Promise<GetUserStoreMo
 export const confirm = async (userId: string) => {
     await usersCollection.updateOne({_id: new ObjId(userId)}, {$set: {"emailConfirmation.isConfirmed": true}})
 }
+
+export const getUserByCredentials = async (email: string, login: string): Promise<GetUserStoreModel | null>  => {
+    try {
+        const user = await usersCollection.findOne({$or: [{email}, {login}]});
+        if (!user) {
+            throw new Error('Not found');
+        }
+        return {
+            id: user._id.toString(),
+            login: user.login,
+            email: user.email,
+            createdAt: user.createdAt,
+            emailConfirmation: user.emailConfirmation,
+        }
+    } catch(error) {
+        return null;
+    }
+}
